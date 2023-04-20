@@ -1,0 +1,150 @@
+body *{
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-size: 1em;
+}
+
+input, button{
+    font-size: 1em;
+}
+input[type="text"]{
+    border: none;
+    border-left: 2px solid;
+    border-bottom: 2px solid;
+    border-color: rgb(91, 189, 91);
+    background-color: #f1bbbb38;
+    transition: 0.2s;
+}
+input[type="text"]:focus{
+    background-color: #bbf1bb;
+}
+
+#app{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#app > header{
+    background-color: rgb(255, 84, 84);
+    color: white;
+    display: flex;
+    padding: 1px;
+}
+
+#app > header > * {
+    flex-grow: 1;
+    text-align: center;
+    border-right: 2px solid darkred;
+    padding: 10px;
+    transition: 0.2s;
+}
+#app > header > *:last-child {
+    border-right: none;
+}
+#app > header > *:hover{
+    background-color: rgb(248, 55, 55);
+    cursor: pointer;
+}
+#app > header > *.selected{
+    background-color: red;
+    cursor: pointer;
+}
+
+
+
+#app > main {
+    padding: 2px;
+}
+
+.radio_list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.radio_list > *{
+    text-align: center;
+    flex-grow: 1;
+    padding: 10px;
+    margin: 0px 1%;
+    color: white;
+    background-color: rgb(111, 133, 111);
+    border: 3px solid rgb(29, 122, 29);
+    cursor: pointer;
+    transition: 0.1s;
+}
+.radio_list > *.soft_selected{
+    background-color: rgb(91, 189, 91);
+}
+.radio_list > *.selected{
+    background-color: rgb(15, 197, 15);
+}
+
+
+
+.word_card{
+    border: 2px solid rgb(15, 197, 15);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+}
+.word_card > .word_options{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.word_card > .word_options > *{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3px;
+}
+
+.word_card > .word_options > *.main{
+    flex-basis: 100%;
+    font-size: 1.5em;
+}
+.word_card > .word_options > * > *:nth-child(1){
+    color: red;
+}
+.word_card > .word_options > * > *:nth-child(2){
+    width: 100%;
+    text-align: center;
+}
+
+.word_card > .update_word{
+    width: 94%;
+    margin-top: 10px;
+    padding: 3px;
+    color: white;
+    cursor: pointer;
+    background-color: rgb(15, 197, 15);
+}
+
+
+
+.cover{
+    background-color: #00000057;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
