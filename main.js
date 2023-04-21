@@ -31,7 +31,7 @@ function sanitize_word(word){
 
 function parse_words_json(words_json){
     let words_data = JSON.parse(words_json);
-    words_data.nouns = parse_words_data_nouns(words_data.nouns);
+    words_data.nouns = sort_words(parse_words_data_nouns(words_data.nouns));
 
     return words_data;
 }
@@ -50,6 +50,27 @@ function parse_words_data_nouns(nouns){
     ));
 }
 
+function sort_words(words){
+    return words.sort((a, b) => {
+        return a.ita > b.ita ? 1 : -1;
+    })
+}
+
+function insert_word_sorted(words, word){
+    console.log("INSERT WORDS", words);
+    let index = words[0].findIndex(w => w.ita > word.ita);
+    if(index < 0) index = words[0].length;
+    words[0].splice(index, 0, word.clone());
+    console.log("AFTER INSERT", words);
+}
+
+function create_empty_word(type){
+    switch(type){
+        case "noun": return new WordNoun('', []);
+    }
+    return null;
+}
+
 //// NOUNS
 
 
@@ -62,7 +83,7 @@ class WordNoun{
     }
 
     true_case(){
-        // console.log("C ", this.ita);
+        console.log("C ", this.ita);
         return this.case || this.generate_regular_case();
     }
     true_plural(){
@@ -130,12 +151,14 @@ class WordNoun{
 
 ///////// WORD COMPONENTS /////////
 
-const NounCard = {
+const WordCard = {
     props:[
+        "type",
         "sourceWord"
     ],
     emits:[
-        "update-word"
+        "update-word",
+        "delete_word"
     ],
     data(){
         return{
@@ -154,7 +177,7 @@ const NounCard = {
         }
     },
     template: /*html*/`
-    <div class="word_card noun">
+    <div class="word_card" :class="type">
         <div class="word_options">
             <div class="main">
                 <span>Słowo</span>
@@ -164,19 +187,57 @@ const NounCard = {
                 <span title="Jeśli jest wiele dopiszczalnych tłumaczeń, można podać wszystkie, oddzielając przecinkami">Tłumaczenia</span>
                 <input type="text" v-model="pol_string">
             </div>
-            <div>
-                <span>Rodzaj</span>
-                <RadioList v-model:option="word.case" :option_values="[['Auto',''],['Męski','m'],['Żeński','f']]" :soft_option="word.true_case()" />
-            </div>
-            <div>
-                <span>Liczba mnoga</span>
-                <input type="text" v-model="word.plural" :placeholder="word.true_plural()">
-            </div>
+            <template v-if="type === 'noun'">
+                <div>
+                    <span>Rodzaj</span>
+                    <RadioList v-model:option="word.case" :option_values="[['Auto',''],['Męski','m'],['Żeński','f']]" :soft_option="word.true_case()" />
+                </div>
+                <div>
+                    <span>Liczba mnoga</span>
+                    <input type="text" v-model="word.plural" :placeholder="word.true_plural()">
+                </div>
+            </template>
+            <template v-if="type === 'verb'">
+                VERBBBB
+            </template>
         </div>
         <button class="update_word" @click="update_word">Aktualizuj Słowo</button>
     </div>
     `
 }
+
+const WordRow = {
+    props:['type', 'word'],
+    emits:['edit-request','delete-request'],
+    computed:{
+        pol_string(){
+            return this.word.pol.join(',');
+        },
+    },
+    methods:{
+        edit_request(){
+            this.$emit('edit-request');
+        },
+        delete_request(){
+            this.$emit('delete-request');
+        }
+    },
+    template: /*html*/`
+        <div class="word_row" :class="type">
+            <div class="ita">{{word.ita}}</div>
+            <div class="pol">{{pol_string}}</div>
+            <template v-if="type === 'noun'">
+                <div class="case">{{word.true_case()}}</div>
+                <div class="plural">{{word.true_plural()}}</div>
+            </template>
+            <template v-if="type === 'verb'">
+                VERBBBBBB
+            </template>
+            <div class="edit" @click="edit_request">Edytuj</div>
+            <div class="delete" @click="delete_request">Usuń</div>
+        </div>
+    `
+};
 
 ///////// APP ////////////////
 
@@ -250,10 +311,14 @@ const app = Vue.createApp({
                 questions_pool_type: "all",
                 questions_pool_size: 0
             },
-            words: {nouns: []},
+            words: {
+                nouns: [],
+                verbs: [],
+            },
             
             on_card_ref: null,
             on_card_type: "",
+            word_to_insert: null,
         };
     },
     computed:{
@@ -278,6 +343,23 @@ const app = Vue.createApp({
             for(let [key, value] of Object.entries(word)){
                 this.on_card_ref[key] = value;
             }
+            if(this.word_to_insert === this.on_card_ref){
+                console.log("INS NEW", type, this.word_to_insert.ita);
+                insert_word_sorted([this.words[type+'s']], this.word_to_insert);
+                this.word_to_insert = null;
+                return;
+            }
+        },
+        delete_word(type, index){
+            const words = this.words[type+'s'];
+            const confirmation = window.confirm("Czy na pewno chcesz usunąć słowo '" + words[index].ita + "' ?");
+            if(confirmation){
+                words.splice(index, 1);
+            }
+        },
+        add_word(type){
+            this.word_to_insert = create_empty_word(type);
+            this.set_on_card(type, this.word_to_insert);
         },
 
         clicked_nav(value){
@@ -316,11 +398,23 @@ const app = Vue.createApp({
 
         <div id="nav_words" v-if="nav === 'words'">
 
-            <p  v-for="noun in words.nouns"
+            <!-- <p  v-for="noun in words.nouns"
                 :key="noun.ita+','+noun.pol[0]"
                 @click="set_on_card('noun', noun)">
                 {{noun.ita}} | {{noun.pol}} | {{noun.true_case()}} | {{noun.true_plural()}}
-            </p>
+            </p> -->
+
+            <button class="add_word"
+                @click="add_word('noun')">
+                + Nowy Rzeczownik
+            </button>
+            <div class="word_rows">
+                <WordRow v-for="(noun, index) in words.nouns"
+                    :word="noun"
+                    @edit-request="set_on_card('noun', noun)"
+                    @delete-request="delete_word('noun', index)"
+                />
+            </div>
 
             <p>
                 {{out_words_json}}
@@ -331,18 +425,19 @@ const app = Vue.createApp({
     </main>
 
     <div class="cover" v-if="on_card_type !== ''" @click="set_on_card()">
-        <NounCard 
+        <WordCard 
             @click.stop=""
+            :type='on_card_type'
             :key="on_card_ref?.ita" 
-            v-if="on_card_type === 'noun'" 
             :sourceWord="on_card_ref"
-            @update-word="n => {update_on_card('noun', n), set_on_card()}" />
+            @update-word="n => {update_on_card(on_card_type, n), set_on_card()}" />
     </div>
 
     `
 });
 
 app.component("RadioList", RadioList);
-app.component("NounCard", NounCard);
+app.component("WordCard", WordCard);
+app.component("WordRow", WordRow);
 
 app.mount("#app");
