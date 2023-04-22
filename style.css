@@ -113,6 +113,10 @@ input[type="text"]:focus{
     flex-basis: 100%;
     font-size: 1.5em;
 }
+.word_card > .word_options > *.small{
+    flex-basis: 33%;
+    font-size: 0.9em;
+}
 .word_card > .word_options > * > *:nth-child(1){
     color: red;
 }
@@ -159,8 +163,16 @@ input[type="text"]:focus{
     border-left: 1px solid red;
     padding-left: 5px;
 }
+.word_row.verb > *{
+    flex-basis: 0;
+    flex-grow: 2;
+}
+.word_row.verb > *.verb_form{
+    flex-grow: 10;
+}
 .word_row > *.edit, .word_row > *.delete{
-    flex-grow: 1;
+    flex-grow: 0;
+    /* flex-basis: 10%; */
     cursor: pointer;
     text-align: center;
     padding-left: 0;

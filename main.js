@@ -12,7 +12,7 @@ Nouns:[
 Verbs:[
     ita:string,
     pol:[string],
-    type: ("nonregular", "are")
+    con: ("-" | "are" | "") // "" = autodetect regular
     forms:{
         normal:[
             String x6 // "" = regular (according to type) 
@@ -32,6 +32,7 @@ function sanitize_word(word){
 function parse_words_json(words_json){
     let words_data = JSON.parse(words_json);
     words_data.nouns = sort_words(parse_words_data_nouns(words_data.nouns));
+    words_data.verbs = sort_words(parse_words_data_verbs(words_data.verbs));
 
     return words_data;
 }
@@ -41,14 +42,23 @@ function generate_words_json(words_data){
     return words_json;
 }
 
-function parse_words_data_nouns(nouns){
-    return nouns.map(noun => new WordNoun(
-        noun.ita,
-        noun.pol,
-        noun.case,
-        noun.plural
+function parse_words_data_nouns(words){
+    return words.map(w => new WordNoun(
+        w.ita,
+        w.pol,
+        w.case,
+        w.plural
     ));
 }
+function parse_words_data_verbs(word){
+    return word.map(w => new WordVerb(
+        w.ita,
+        w.pol,
+        w.con,
+        w.forms
+    ));
+}
+
 
 function sort_words(words){
     return words.sort((a, b) => {
@@ -67,6 +77,7 @@ function insert_word_sorted(words, word){
 function create_empty_word(type){
     switch(type){
         case "noun": return new WordNoun('', []);
+        case "verb": return new WordVerb('', []);
     }
     return null;
 }
@@ -131,21 +142,76 @@ class WordNoun{
         return '';
     }
 
-    true(){
-        return new WordNoun(
-            this.ita,
-            this.pol,
-            this.true_case(),
-            this.true_plural()
-        );
+    true_data(){
+        return {
+            ita: this.ita,
+            pol: this.pol,
+            case: this.true_case(),
+            plural: this.true_plural(),
+        };
     }
 }
 
 
 //// VERBS
 
+class WordVerb{
+    constructor(ita, pol, con = "", forms = {}){
+        this.ita = sanitize_word(ita);
+        this.pol = pol.map(w => sanitize_word(w));
+        this.con = con;
+        this.forms = {};
+        this.load_form('normal', forms.normal);
+    }
 
-// TODO
+    load_form(name, data = [], count = 6){
+        this.forms[name] = [];
+        for(let i = 0; i < count; i++){
+            this.forms[name][i] = sanitize_word(data[i] || "");
+        }
+    }
+
+    clone(){
+        return new WordVerb(
+            this.ita,
+            this.pol,
+            this.con,
+            this.forms
+        );
+    }
+
+    true_con(){
+        if(this.con){
+            return this.con;
+        }
+        if(this.ita.slice(-3) === "are"){
+            return "are";
+        }
+        return "";
+    }
+
+    true_form_normal(){
+        const con = this.true_con();
+
+        if(con === "are"){
+            const base = this.ita.slice(0, -3);
+            const ends_with_i = base.length > 0 && (base[base.length - 1] === 'i');
+            const opt_i = ends_with_i ? "" : "i";
+
+            return [
+                this.forms.normal[0] || base + 'o',
+                this.forms.normal[1] || base + opt_i,
+                this.forms.normal[2] || base + 'a',
+                this.forms.normal[3] || base + opt_i + 'amo',
+                this.forms.normal[4] || base + 'ate',
+                this.forms.normal[5] || base + 'ano',
+            ];
+        }
+
+
+        return this.forms.normal;
+    }
+}
 
 
 
@@ -198,7 +264,14 @@ const WordCard = {
                 </div>
             </template>
             <template v-if="type === 'verb'">
-                VERBBBB
+                <div class="small" v-for="i in 6">
+                    <span>{{['io', 'tu', 'lui/lei', 'noi', 'voi', 'loro'][i-1]}}</span>
+                    <input type="text" v-model="word.forms.normal[i-1]" :placeholder="word.true_form_normal()[i-1]">
+                </div>
+                <div>
+                    <span>Konigacja</span>
+                    <input type="text" v-model="word.con" :placeholder="word.true_con()">
+                </div>
             </template>
         </div>
         <button class="update_word" @click="update_word">Aktualizuj Słowo</button>
@@ -231,7 +304,8 @@ const WordRow = {
                 <div class="plural">{{word.true_plural()}}</div>
             </template>
             <template v-if="type === 'verb'">
-                VERBBBBBB
+                <div class="con">{{word.true_con()}}</div>
+                <div class="verb_form verb_form_normal">{{word.true_form_normal().join(', ')}}</div>
             </template>
             <div class="edit" @click="edit_request">Edytuj</div>
             <div class="delete" @click="delete_request">Usuń</div>
@@ -276,6 +350,15 @@ const TEST_WORD_JSON = `
             {"ita": "amico", "pol":["przyjaciel"], "plural":"amici"},
             {"ita": "amica", "pol":["przyjaciułka"]},
             {"ita": "cane", "pol":["pies"], "case":"m"}
+        ],
+        "verbs": [
+            {"ita": "essere", "pol":["być"], "con":"-", "forms":{
+                "normal": ["sono","sei","e","siamo","siete","sono"]
+            }},
+            {"ita": "comprare", "pol":["kupować"], "con":"are", "forms":{}},
+            {"ita": "mangiare", "pol":["jeść"], "con":"", "forms":{
+                "normal": ["","","mangisima"]
+            }}
         ]
     }
 `;
@@ -404,15 +487,30 @@ const app = Vue.createApp({
                 {{noun.ita}} | {{noun.pol}} | {{noun.true_case()}} | {{noun.true_plural()}}
             </p> -->
 
+
             <button class="add_word"
                 @click="add_word('noun')">
                 + Nowy Rzeczownik
             </button>
             <div class="word_rows">
                 <WordRow v-for="(noun, index) in words.nouns"
+                    type="noun"
                     :word="noun"
                     @edit-request="set_on_card('noun', noun)"
                     @delete-request="delete_word('noun', index)"
+                />
+            </div>
+            
+            <button class="add_word"
+                @click="add_word('verb')">
+                + Nowy Czasownik
+            </button>
+            <div class="word_rows">
+                <WordRow v-for="(verb, index) in words.verbs"
+                    type="verb"
+                    :word="verb"
+                    @edit-request="set_on_card('verb', verb)"
+                    @delete-request="delete_word('verb', index)"
                 />
             </div>
 
