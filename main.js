@@ -398,7 +398,8 @@ const app = Vue.createApp({
                 nouns: [],
                 verbs: [],
             },
-            
+            current_list_word_type: 'noun',
+
             on_card_ref: null,
             on_card_type: "",
             word_to_insert: null,
@@ -407,6 +408,12 @@ const app = Vue.createApp({
     computed:{
         out_words_json(){
             return generate_words_json(this.words);
+        },
+        current_list_word_type_pol(){
+            switch (this.current_list_word_type){
+                case 'noun': return 'Rzeczownik';
+                case 'verb': return 'Czasownik';
+            }
         }
     },
 
@@ -487,21 +494,25 @@ const app = Vue.createApp({
                 {{noun.ita}} | {{noun.pol}} | {{noun.true_case()}} | {{noun.true_plural()}}
             </p> -->
 
+            <RadioList 
+                v-model:option="current_list_word_type"
+                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb']]"
+            />
 
             <button class="add_word"
                 @click="add_word('noun')">
-                + Nowy Rzeczownik
+                + Nowy {{ current_list_word_type_pol }}
             </button>
             <div class="word_rows">
-                <WordRow v-for="(noun, index) in words.nouns"
-                    type="noun"
+                <WordRow v-for="(noun, index) in words[current_list_word_type + 's']"
+                    :type="current_list_word_type"
                     :word="noun"
-                    @edit-request="set_on_card('noun', noun)"
-                    @delete-request="delete_word('noun', index)"
+                    @edit-request="set_on_card(current_list_word_type, noun)"
+                    @delete-request="delete_word(current_list_word_type, index)"
                 />
             </div>
             
-            <button class="add_word"
+            <!-- <button class="add_word"
                 @click="add_word('verb')">
                 + Nowy Czasownik
             </button>
@@ -512,7 +523,7 @@ const app = Vue.createApp({
                     @edit-request="set_on_card('verb', verb)"
                     @delete-request="delete_word('verb', index)"
                 />
-            </div>
+            </div> -->
 
             <p>
                 {{out_words_json}}
