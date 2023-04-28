@@ -39,7 +39,7 @@ function parse_words_json(words_json){
 
 function generate_words_json(words_data){
     let words_json = JSON.stringify(words_data);
-    return words_json;
+    return words_json.toString();
 }
 
 function parse_words_data_nouns(words){
@@ -80,6 +80,64 @@ function create_empty_word(type){
         case "verb": return new WordVerb('', []);
     }
     return null;
+}
+
+let APP_CTX = null;
+
+const TEST_WORD_JSON = `
+    {
+        "nouns": [
+            {"ita": "gatto", "pol":["kot", "kocur"]},
+            {"ita": "amico", "pol":["przyjaciel"], "plural":"amici"},
+            {"ita": "amica", "pol":["przyjaciułka"]},
+            {"ita": "cane", "pol":["pies"], "case":"m"}
+        ],
+        "verbs": [
+            {"ita": "essere", "pol":["być"], "con":"-", "forms":{
+                "normal": ["sono","sei","e","siamo","siete","sono"]
+            }},
+            {"ita": "comprare", "pol":["kupować"], "con":"are", "forms":{}},
+            {"ita": "mangiare", "pol":["jeść"], "con":"", "forms":{
+                "normal": ["","","mangisima"]
+            }}
+        ]
+    }
+`;
+const EMPTY_JSON = `
+    {
+        "nouns":[],
+        "verbs":[]
+    }
+`;
+const default_words_json_url = "";
+function fetch_words_json(url = default_words_json_url){
+    return new Promise.resolve(TEST_WORD_JSON);
+}
+function get_loacal_words_json(){
+    return localStorage?.getItem("words_json") || EMPTY_JSON;
+}
+function save_loacl_words_json(json){
+    if(typeof json != "string"){
+        console.error("BAD JSON");
+        return false;
+    }
+    if(localStorage){
+        localStorage.setItem("words_json", json)
+        return true;
+    }
+    return false;
+}
+function export_words_json(json){
+    if(typeof json != "string"){
+        console.error("BAD JSON");
+        return false;
+    }
+    const data_url = "data:text/json;charset=utf-8," + encodeURIComponent(json);
+    const a_elem = document.createElement('a');
+    a_elem.setAttribute('href', data_url);
+    a_elem.setAttribute('download', `words ${new Date().toISOString()}.json`);
+    a_elem.click();
+    return true;
 }
 
 //// NOUNS
@@ -240,6 +298,9 @@ const WordCard = {
     methods:{
         update_word(){
             this.$emit('update-word', this.word.clone());
+        },
+        focus_on_word(){
+            this.$refs.word_ita_input.focus();
         }
     },
     template: /*html*/`
@@ -247,7 +308,7 @@ const WordCard = {
         <div class="word_options">
             <div class="main">
                 <span>Słowo</span>
-                <input type="text" v-model="word.ita">
+                <input type="text" v-model="word.ita" ref="word_ita_input">
             </div>
             <div class="main">
                 <span title="Jeśli jest wiele dopiszczalnych tłumaczeń, można podać wszystkie, oddzielając przecinkami">Tłumaczenia</span>
@@ -342,27 +403,6 @@ const RadioList = {
     `
 };
 
-
-const TEST_WORD_JSON = `
-    {
-        "nouns": [
-            {"ita": "gatto", "pol":["kot", "kocur"]},
-            {"ita": "amico", "pol":["przyjaciel"], "plural":"amici"},
-            {"ita": "amica", "pol":["przyjaciułka"]},
-            {"ita": "cane", "pol":["pies"], "case":"m"}
-        ],
-        "verbs": [
-            {"ita": "essere", "pol":["być"], "con":"-", "forms":{
-                "normal": ["sono","sei","e","siamo","siete","sono"]
-            }},
-            {"ita": "comprare", "pol":["kupować"], "con":"are", "forms":{}},
-            {"ita": "mangiare", "pol":["jeść"], "con":"", "forms":{
-                "normal": ["","","mangisima"]
-            }}
-        ]
-    }
-`;
-
 // app._instance.data.words.nouns.push(new WordNoun("casa", ["dom"]))
 
 const app = Vue.createApp({
@@ -385,6 +425,8 @@ const app = Vue.createApp({
     },
     mounted(){
         this.update_words_json(TEST_WORD_JSON);
+        console.log("MOUNTED");
+        APP_CTX = this;
     },
     data(){
         return {
@@ -419,6 +461,21 @@ const app = Vue.createApp({
 
     methods: {
         
+        save_words(){
+            const res = save_loacl_words_json(this.out_words_json);
+            if(!res){console.log("Failed saving words");}
+            return res;
+        },
+        export_words(){
+            const res = export_words_json(this.out_words_json);
+            if(!res){console.log("Failed exporting words");}
+            return res;
+        },
+        import_words(){
+            const json = prompt("Wklej JSON słów do zaimportowania", "");
+            this.update_words_json(json);
+        },
+
         update_words_json(words_json){
             this.words = parse_words_json(words_json);
         },
@@ -450,6 +507,10 @@ const app = Vue.createApp({
         add_word(type){
             this.word_to_insert = create_empty_word(type);
             this.set_on_card(type, this.word_to_insert);
+            this.$nextTick(() => {
+                console.log(this.$refs.word_card_elem);
+                this.$refs.word_card_elem.focus_on_word();
+            });
         },
 
         clicked_nav(value){
@@ -494,13 +555,26 @@ const app = Vue.createApp({
                 {{noun.ita}} | {{noun.pol}} | {{noun.true_case()}} | {{noun.true_plural()}}
             </p> -->
 
+            <!-- <button class="io_word"
+                @click="save_words()"
+                title="Zachowuje wprowadzone modyfikacje localnie">
+                Zapisz listę słów
+            </button> -->
+            <button class="io_word"
+                @click="export_words()">
+                Eksportuj listę słów
+            </button>
+            <button class="io_word"
+                @click="import_words()">
+                Importuj listę słów
+            </button>
             <RadioList 
                 v-model:option="current_list_word_type"
                 :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb']]"
             />
 
             <button class="add_word"
-                @click="add_word('noun')">
+                @click="add_word(current_list_word_type)">
                 + Nowy {{ current_list_word_type_pol }}
             </button>
             <div class="word_rows">
@@ -539,7 +613,9 @@ const app = Vue.createApp({
             :type='on_card_type'
             :key="on_card_ref?.ita" 
             :sourceWord="on_card_ref"
-            @update-word="n => {update_on_card(on_card_type, n), set_on_card()}" />
+            @update-word="n => {update_on_card(on_card_type, n), set_on_card()}"
+            ref="word_card_elem"
+        />
     </div>
 
     `
