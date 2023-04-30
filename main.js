@@ -22,8 +22,66 @@ Verbs:[
 
 */
 
+//////////// Questions /////////
+
+function copy_if_array(arr){
+    return (arr instanceof Array) ? [...arr] : arr;
+}
+class Question {
+    constructor(type, rev, ita, pol, options){
+        this.type = type;
+        this.ita = ita;
+        this.pol = [...pol];
+        this.rev = rev;
+        // Nouns
+        this.article = copy_if_array(options.article); // [string]?
+        this.plural = options.plural; // bool?
+
+        // Verb
+        this.person = copy_if_array(options.person); // [normal | "inf"]
+    }
+};
+
+function question_gen_rev(options){
+    console.log(options.questions_lang);
+    if(options.questions_lang == "ita") return false;
+    if(options.questions_lang == "pol") return true;
+    return Math.random() >= 0.5;
+}
+
+function get_random_element_from_array(arr){
+    const i = Math.floor(Math.random() * arr.length);
+    return arr[i];
+}
+function extract_random_element_from_array(arr){
+    if(arr.length === 0){
+        return undefined;
+    }
+    const i = Math.floor(Math.random() * arr.length);
+    const res = arr[i];
+    arr.splice(i, 1);
+    return res;
+}
+function extract_random_elements_from_array(arr, n){
+    const res = [];
+    while(n > 0 && arr.length > 0){
+        res.push(extract_random_element_from_array(arr));
+        n = n - 1;
+    }
+    return res;
+}
+
+function convert_words_to_questions(words, options){
+    let res = [];
+    for(let w of words){
+        res.push(...w.to_all_questions(options));
+    }
+    return res;
+}
+
 
 ////////// LANGUAGE REGULARS ////////////////
+
 
 function sanitize_word(word){
     return word.trim();
@@ -168,6 +226,26 @@ class WordNoun{
         );
     }
 
+    to_question(rev, plural, article){
+        const options = {};
+        options.plural = plural;
+        if(article) options.article = ["un"];
+        return new Question("noun", rev, plural ? this.true_plural() : this.ita, this.pol, options);
+    }
+
+    to_all_questions(options){
+        if(this.plural){
+            return [
+                this.to_question(question_gen_rev(options), true, false),
+                this.to_question(question_gen_rev(options), false, false),
+            ];
+        }else{
+            return [
+                this.to_question(question_gen_rev(options), Math.random() > 0.5, false),
+            ];
+        }
+    }
+
     generate_regular_case(){
         const last_char = this.ita[this.ita.length - 1];
         if(last_char === 'o'){
@@ -236,6 +314,10 @@ class WordVerb{
             this.con,
             this.forms
         );
+    }
+
+    to_all_questions(options){
+        return [];
     }
 
     true_con(){
@@ -378,32 +460,6 @@ const WordRow = {
 ///////// APP ////////////////
 
 
-const RadioList = {
-    props:[
-        "option_values", "option", "soft_option"
-    ],
-    emits:[
-        "update:option"
-    ],
-    methods:{
-        set_option(value){
-            console.log('OPT', this.option,  value);
-            this.$emit("update:option", value);
-        }
-    },
-
-    template: /*html*/`
-    <div class="radio_list">
-        <div v-for="[name, key, title] in option_values" 
-            @click="set_option(key)"
-            :title="title" 
-            :class="{selected: option == key, soft_selected: soft_option == key}">
-                {{name}}
-        </div>
-    </div>
-    `
-};
-
 // app._instance.data.words.nouns.push(new WordNoun("casa", ["dom"]))
 
 const app = Vue.createApp({
@@ -431,12 +487,21 @@ const app = Vue.createApp({
     },
     data(){
         return {
-            nav: 'options',
+            nav: 'test',
             options: {
                 questions_lang: "all",
                 questions_pool_type: "all",
                 questions_pool_size: 0
             },
+            test_started: false,
+            test_pool_unpassed: [],
+            test_passed: [],
+            test_unpassed: [],
+            test_index: 0,
+            test_question: "",
+            test_answer: "",
+            test_info: "",
+
             words: {
                 nouns: [],
                 verbs: [],
@@ -514,9 +579,105 @@ const app = Vue.createApp({
             });
         },
 
+        next_question(){
+            console.log("NEXT QUESTION");
+
+            if(this.test_pool_unpassed.length == 0){
+                const all_passed = this.regenerate_pool();
+                if(all_passed){
+                    console.log("ALL PASSED");
+                    this.test_info = "Wszystkie wyrazy zostały odgadnięte !!!";
+                    return true;
+                }
+            }
+
+            this.test_index = Math.floor(Math.random() * this.test_pool_unpassed.length);
+            this.display_question(this.test_pool_unpassed[this.test_index]);
+        },
+
+        display_question(question){
+            console.log("NEW QUESTION", question);
+            this.test_answer = "";
+            if(question.type == "noun"){
+                if(question.rev){
+                    this.test_question = question.pol.join(', ');
+                    if(question.plural){
+                        this.test_question += " [liczba mnoga]";
+                    }
+                }else{
+                    this.test_question = question.ita;
+                }
+                // this.test_info = "noun";
+            }else{
+                // this.test_info = "Verb";
+            }
+        },
+
+        pass_question(){
+            this.test_pool_unpassed.splice(this.test_index, 1);
+            this.test_index = -1;
+        },
+
+        check_answer(){
+            const answer = this.test_answer.trim();
+            const question = this.test_pool_unpassed[this.test_index];
+            if(question.type === "noun"){   
+                if(question.rev){
+                    if(answer === question.ita){
+                        this.test_info = "Poprawnie";
+                        this.pass_question();
+                        this.next_question();
+                        return true;
+                    }else{
+                        this.test_info = "Niepoprawnie";
+                        this.next_question();
+                        return false;
+                    }
+                }else{
+                    if(question.pol.indexOf(answer) !== -1){
+                        this.test_info = "Poprawnie";
+                        this.pass_question();
+                        this.next_question();
+                        return true;
+                    }else{
+                        this.test_info = "Niepoprawnie";
+                        this.next_question();
+                        return false;
+                    }
+
+                }
+            }
+        },
+
+        regenerate_pool(){
+            
+            if(this.options.questions_pool_type === "all"){
+                this.test_pool_unpassed = this.test_unpassed;
+                this.test_unpassed = [];
+            }else{
+                this.test_pool_unpassed = extract_random_elements_from_array(this.test_unpassed, this.options);
+            }
+            console.log("REGENERATED", this.test_pool_unpassed, this.test_unpassed);
+            return this.test_pool_unpassed.length === 0;
+        },
+
+        start_test(){
+            this.test_started = true;
+            this.test_info = "";
+            this.test_question = "";
+            this.test_answer = "";
+
+            this.test_unpassed = convert_words_to_questions(this.words.nouns, this.options);
+            console.log("STARTED", this.test_unpassed);
+            this.next_question();
+        },
+
         clicked_nav(value){
             console.log('NAV', value);
             this.nav = value;
+            if(value != "test"){
+                this.test_started = false;
+            }
         },
 
     },
@@ -605,6 +766,32 @@ const app = Vue.createApp({
             </p>
 
         </div>
+        
+        <div id="nav_test" v-if="nav === 'test'">
+
+            <template v-if="test_started">
+
+                <p class="question">
+                    {{test_question}}
+                </p>
+
+                <input type="text" class="answer" ref="answer_elem" v-model="test_answer">
+                <button class="quess_btn" @click="check_answer">Zgadnij</button>
+                
+                <p>
+                    Info: {{test_info}}
+                </p>
+
+            </template>
+            <template v-else>
+                <button class="new_test_btn"
+                        @click="start_test()">
+                    Rozpoczij Test
+                </button>
+            </template>
+
+
+        </div>
 
     </main>
 
@@ -621,6 +808,35 @@ const app = Vue.createApp({
 
     `
 });
+
+///// OTHER
+
+const RadioList = {
+    props:[
+        "option_values", "option", "soft_option"
+    ],
+    emits:[
+        "update:option"
+    ],
+    methods:{
+        set_option(value){
+            console.log('OPT', this.option,  value);
+            this.$emit("update:option", value);
+        }
+    },
+
+    template: /*html*/`
+    <div class="radio_list">
+        <div v-for="[name, key, title] in option_values" 
+            @click="set_option(key)"
+            :title="title" 
+            :class="{selected: option == key, soft_selected: soft_option == key}">
+                {{name}}
+        </div>
+    </div>
+    `
+};
+
 
 app.component("RadioList", RadioList);
 app.component("WordCard", WordCard);
