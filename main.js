@@ -22,6 +22,15 @@ Verbs:[
 
 */
 
+function animate_flash_via_transition(elem, value){
+    elem.classList.remove("anim_flash_transition")
+    elem.style.backgroundColor = value;
+    setTimeout(() => {
+        elem.classList.add("anim_flash_transition")
+        elem.style.backgroundColor = "";
+    }, 0)
+}
+
 let APP_CTX = null;
 
 const TEST_WORD_JSON = `
@@ -122,6 +131,8 @@ const app = Vue.createApp({
                 questions_pool_size: 0
             },
             test_started: false,
+            test_is_all: false,
+            test_bad: false,
             test_index: 0,
             test_question_ref: null,
             test_answer: "",
@@ -208,6 +219,7 @@ const app = Vue.createApp({
 
         ///////////////// TEST /////////////////
 
+
         next_question(){
             console.log("NEXT QUESTION");
 
@@ -216,6 +228,7 @@ const app = Vue.createApp({
                 if(all_passed){
                     console.log("ALL PASSED");
                     this.test_log = "Wszystkie wyrazy zostały odgadnięte !!!";
+                    this.test_is_all = true;
                     return true;
                 }
             }
@@ -229,13 +242,21 @@ const app = Vue.createApp({
         },
 
         pass_question(correct){
+            if(this.test_bad){
+                this.test_bad = false;
+                this.next_question();
+                return;
+            }
             if(correct){
                 this.test_log = "Poprawnie";
                 this.test_pool_unpassed.splice(this.test_index, 1);
+                this.next_question();
+                this.flash_green();
             }else{
                 this.test_log = "Niepoprawnie";
+                this.test_bad = true;
+                this.falsh_red();
             }
-            this.next_question();
             // this.test_index = -1;
             // this.test_question_ref = null;
         },
@@ -260,6 +281,8 @@ const app = Vue.createApp({
 
         start_test(){
             this.test_started = true;
+            this.test_bad = false;
+            this.test_is_all = false;
             this.test_log = "";
             this.test_index = -1;
             this.test_question_ref = null;
@@ -269,6 +292,16 @@ const app = Vue.createApp({
             this.test_unpassed = convert_words_to_questions(this.words.nouns, this.options);
             console.log("STARTED", this.test_unpassed);
             this.next_question();
+        },
+
+        flash_green(){
+            console.log("GREEN");
+            animate_flash_via_transition(document.body, "#60f16e");
+        },
+
+        falsh_red(){
+            console.log("RED");
+            animate_flash_via_transition(document.body, "#f16060");
         },
 
         ////////////////////////////////////
@@ -372,7 +405,10 @@ const app = Vue.createApp({
 
             <template v-if="test_started">
 
-                <div class="question">
+                <div v-if="test_is_all" class="questions_all_done">
+                    Wszystkie wylosowane pytania zostały rozwiązane!
+                </div>
+                <div v-else class="question">
                     <span v-html="test_question_ref.question"></span>
                 </div>
 
@@ -383,6 +419,7 @@ const app = Vue.createApp({
                 <div class="answer_container">
                     
                     <input type="text" class="answer"
+                            :class="{bad: test_bad}"
                             ref="answer_elem"
                             v-model="test_answer"
                             @keydown.enter="check_answer">
@@ -390,9 +427,13 @@ const app = Vue.createApp({
                     <button class="quess_btn" @click="check_answer">Enter</button>
                 </div>
 
-                <div class="question_log">
-                    <span v-html="test_log"></span>
+                <div v-if="test_bad" class="test_bad_container">
+                    <span v-html="test_question_ref.expected"></span>
                 </div>
+
+                <!-- <div class="question_log">
+                    <span v-html="test_log"></span>
+                </div> -->
 
             </template>
             <template v-else>

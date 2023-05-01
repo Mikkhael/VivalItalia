@@ -8,6 +8,10 @@ body {
     font-size: 1em;
 }
 
+.anim_flash_transition {
+    transition: background-color 0.4s ease-out;
+}
+
 input, button{
     font-size: 1em;
 }
@@ -61,6 +65,8 @@ input[type="text"]:focus{
 #app > main {
     padding: 2px;
 }
+
+
 
 .radio_list{
     display: flex;
@@ -193,10 +199,13 @@ input[type="text"]:focus{
     font-size: 4em;
 }
 
-.question{
+.question, .questions_all_done{
     font-size: 4em;
     text-align: center;
     min-height: 2.5em;
+}
+.questions_all_done{
+    color: rgb(27, 198, 27);
 }
 
 .question_info{
@@ -207,6 +216,13 @@ input[type="text"]:focus{
 
 .answer_container{
     font-size: 2em;
+}
+.answer.bad{
+    color: red;
+}
+.test_bad_container{
+    font-size: 2em;
+    color: red;
 }
 
 .question_log{

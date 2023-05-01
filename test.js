@@ -35,9 +35,11 @@ class TestQuestion_Noun extends TestQuestion{
 			if(is_plural){
 				this.question += " [l.&nbsp;mnoga]";
 				this.info = "Podaj słowo po włosku, w liczbie mnogiej";
+				this.expected = word.true_plural();
 			}else{
 				this.question += " [l.&nbsp;pojedyńcza]"
 				this.info = "Podaj słowo po włosku, w liczbie pojedyńczej";
+				this.expected = word.ita;
 			}
 		}else{
 			if(is_plural){
@@ -46,6 +48,7 @@ class TestQuestion_Noun extends TestQuestion{
 				this.question = word.ita;
 			}
 			this.info = "Podaj słowo po polsku, w <b>liczbie pojedyńczej</b>. (Nie zaimplementowałemm liczby mnogiej po polsku)"
+			this.expected = word.pol.join(', ');
 		}
 	}
 
