@@ -29,48 +29,121 @@ class TestQuestion_Noun extends TestQuestion{
 		super("normal", word);
 		this.is_pol = lang_to_is_pol(lang);
 		this.is_plural = is_plural;
+	}
 
+	generate(){
 		if(this.is_pol){
-			if(is_plural){
-				this.question = word.pol_plural.join(', ');
-				this.expected = word.true_plural();
+			if(this.is_plural){
+				this.question = this.word.pol_plural.join(', ');
+				this.answer = this.word.true_plural();
 			}else{
-				this.question = word.pol.join(', ');
-				this.expected = word.ita;
+				this.question = this.word.pol.join(', ');
+				this.answer = this.word.ita;
 			}
-			this.info = "Podaj słowo po włosku.";
+			this.expected = this.answer;
+			this.info = "Podaj rzeczownik po włosku.";
 		}else{
-			if(is_plural){
-				this.question = word.true_plural();
-				this.expected = word.pol_plural.join(', ');
+			if(this.is_plural){
+				this.question = this.word.true_plural();
+				this.answer = this.word.pol_plural;
 			}else{
-				this.question = word.ita;
-				this.expected = word.pol.join(', ');
+				this.question = this.word.ita;
+				this.answer = this.word.pol;
 			}
-			this.info = "Podaj słowo po polsku."
+			this.expected = this.answer.join(', ');
+			this.info = "Podaj rzeczownik po polsku."
 		}
+		this.generated = true;
 	}
 
 	check_answer(answer){
 		const answer_sanetized = answer.trim();
+		return do_arrays_intersect(answer_sanetized, this.answer);
+	}
+};
+
+const PRONOUNS = [
+	[['io'], ['ja']],
+	[['tu'], ['ty']],
+	[['lui','lei'], ['on', 'ona', 'ono']],
+	[['noi'], ['my']],
+	[['voi'], ['wy']],
+	[['loro'], ['oni', 'one']],
+];
+class TestQuestion_Verb extends TestQuestion{
+	constructor(word, lang, form, person = 0){
+		super("normal", word);
+		this.is_pol = lang_to_is_pol(lang);
+		this.form = form;
+		this.person = person;
+	}
+
+	generate(){
 		if(this.is_pol){
-			if(this.is_plural){
-				return this.word.true_plural() === answer_sanetized;
+			if(this.form === "normal"){
+				const pronoun_pol = PRONOUNS[this.person][1].random_elem();
+				this.question = pronoun_pol + " " + this.word.pol.join(', ');
+				this.expected = this.word.true_form_normal()[this.person];
+				this.answer = this.expected;
+				this.info = "Podaj czasownik po włosku, w podanej osobie.";
 			}else{
-				return this.word.ita === answer_sanetized;
+				this.question = this.word.pol.join(', ');
+				this.expected = this.word.ita;
+				this.answer = this.expected;
+				this.info = "Podaj czasownik po włosku, w bezokoliczniku.";
 			}
 		}else{
-			if(this.is_plural){
-				return this.word.pol_plural.indexOf(answer_sanetized) !== -1;
+			if(this.form === "normal"){
+				const form_normal = this.word.true_form_normal();
+				this.question = form_normal[this.person];
+				this.answer = this.word.pol;
+
+				// Wina czasowników jak "sono", identycznych w osobach 0 i 5
+				this.answer_pronoun = PRONOUNS.filter((pro, pro_i) => 
+											form_normal[pro_i] === form_normal[this.person])
+										.map(pro => pro[1])
+										.flat();
+				
+				this.expected = this.answer_pronoun.join('/') + " " + this.word.pol.join(", ");
+				this.info = "Podaj czasownik po polsku, <b>dodając do bezokolicznika odpowiedni zaimek</b> (np. zamiast 'robię' napisz 'ja robić'). Nie zaimplementowano odmiany czasowników polskich.";
 			}else{
-				return this.word.pol.indexOf(answer_sanetized) !== -1;
+				this.question = this.word.ita;
+				this.expected = this.word.pol.join(', ');
+				this.answer = this.word.pol;
+				this.info = "Podaj czasownik po polsku, w bezokoliczniku.";
 			}
+		}
+		this.generated = true;
+	}
+
+	check_answer(answer){
+		const answer_sanetized = answer.trim();
+		if(this.answer_pronoun){
+			const [answer_pronoun,answer_verb] = answer_sanetized.split(/\s+/);
+			return do_arrays_intersect(answer_pronoun, this.answer_pronoun) &&
+				   do_arrays_intersect(answer_verb, this.answer);
+		}else{
+			return do_arrays_intersect(answer_sanetized, this.answer);
 		}
 	}
 };
 
+function do_arrays_intersect(arr1, arr2){
+	if(!(arr1 instanceof Array)) arr1 = [arr1];
+	if(!(arr2 instanceof Array)) arr2 = [arr2];
+	for(let elem of arr1){
+		if(arr2.indexOf(elem) !== -1){
+			return true;
+		}
+	}
+	return false;
+}
+
 Array.prototype.random_index = function(){
 	return Math.floor(Math.random() * this.length);
+}
+Array.prototype.random_elem = function(){
+	return this[this.random_index()];
 }
 
 Array.prototype.extract_random = function(n = 1){

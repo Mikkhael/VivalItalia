@@ -245,6 +245,9 @@ const app = Vue.createApp({
 
             this.test_index = this.test_pool_unpassed.random_index();
             this.test_question_ref = this.test_pool_unpassed[this.test_index];
+            if(!this.test_question_ref.generated){
+                this.test_question_ref.generate();
+            }
             this.test_answer = "";
             this.$nextTick(() => {
                 this.$refs.answer_elem.focus();
@@ -299,7 +302,10 @@ const app = Vue.createApp({
             this.test_answer = "";
             this.test_pool_unpassed = [];
 
-            this.test_unpassed = convert_words_to_questions(this.words.nouns, this.options);
+            const verbs_questions = convert_words_to_questions(this.words.verbs, this.options);
+            const nouns_questions = convert_words_to_questions(this.words.nouns, this.options);
+
+            this.test_unpassed = [...verbs_questions, ...nouns_questions];
             console.log("STARTED", this.test_unpassed);
             this.next_question();
         },
@@ -355,17 +361,6 @@ const app = Vue.createApp({
 
         <div id="nav_words" v-if="nav === 'words'">
 
-            <!-- <p  v-for="noun in words.nouns"
-                :key="noun.ita+','+noun.pol[0]"
-                @click="set_on_card('noun', noun)">
-                {{noun.ita}} | {{noun.pol}} | {{noun.true_case()}} | {{noun.true_plural()}}
-            </p> -->
-
-            <!-- <button class="io_word"
-                @click="save_words()"
-                title="Zachowuje wprowadzone modyfikacje localnie">
-                Zapisz listę słów
-            </button> -->
             <button class="io_word"
                 @click="export_words()">
                 Eksportuj listę słów

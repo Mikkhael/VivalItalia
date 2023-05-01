@@ -177,11 +177,23 @@ class WordVerb{
     }
 
 	is_complete(){
-		return this.ita !== "" && this.pol.length > 0;
+		return this.ita !== "" && this.pol.length > 0 &&
+				sanitize_word_arr(this.true_form_normal()).length === 6;
 	}
 
     to_all_questions(options){
-        return [];
+		if(!this.is_complete()){
+			return [];
+		}
+        return [
+			new TestQuestion_Verb(this, options.questions_lang, "inf"),
+			new TestQuestion_Verb(this, options.questions_lang, "normal", 0),
+			new TestQuestion_Verb(this, options.questions_lang, "normal", 1),
+			new TestQuestion_Verb(this, options.questions_lang, "normal", 2),
+			new TestQuestion_Verb(this, options.questions_lang, "normal", 3),
+			new TestQuestion_Verb(this, options.questions_lang, "normal", 4),
+			new TestQuestion_Verb(this, options.questions_lang, "normal", 5),
+		];
     }
 
     true_con(){
