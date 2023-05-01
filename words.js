@@ -5,6 +5,9 @@
 function sanitize_word(word){
     return word.trim();
 }
+function sanitize_word_arr(arr){
+	return arr.map(x => sanitize_word(x)).filter(x => x != "");
+}
 
 function parse_words_json(words_json){
     let words_data = JSON.parse(words_json);
@@ -23,6 +26,7 @@ function parse_words_data_nouns(words){
     return words.map(w => new WordNoun(
         w.ita,
         w.pol,
+		w.pol_plural,
         w.case,
         w.plural
     ));
@@ -53,7 +57,7 @@ function insert_word_sorted(words, word){
 
 function create_empty_word(type){
     switch(type){
-        case "noun": return new WordNoun('', []);
+        case "noun": return new WordNoun();
         case "verb": return new WordVerb('', []);
     }
     return null;
@@ -65,9 +69,10 @@ function create_empty_word(type){
 
 
 class WordNoun{
-    constructor(ita, pol, gram_case = "", plural = ""){
+    constructor(ita = '', pol = [], pol_plural = [], gram_case = "", plural = ""){
         this.ita = sanitize_word(ita);
-        this.pol = pol.map(x => sanitize_word(x));
+        this.pol = sanitize_word_arr(pol);
+        this.pol_plural = sanitize_word_arr(pol_plural);
         this.case = gram_case;
         this.plural = sanitize_word(plural);
     }
@@ -84,22 +89,30 @@ class WordNoun{
         return new WordNoun(
             this.ita,
             this.pol,
+			this.pol_plural,
             this.case,
             this.plural
         );
     }
 
+	is_complete(){
+		return this.ita !== '' && this.pol.length > 0 && this.pol_plural.length > 0;
+	}
+
     to_all_questions(options){
-        if(this.plural){
+		if(!this.is_complete()){
+			return [];
+		}
+        // if(this.plural){
             return [
                 new TestQuestion_Noun(this, options.questions_lang, true),
                 new TestQuestion_Noun(this, options.questions_lang, false),
             ];
-        }else{
-            return [
-                new TestQuestion_Noun(this, options.questions_lang, Math.random() > 0.5),
-            ];
-        }
+        // }else{
+        //     return [
+        //         new TestQuestion_Noun(this, options.questions_lang, Math.random() > 0.5),
+        //     ];
+        // }
     }
 
     generate_regular_case(){
@@ -133,15 +146,6 @@ class WordNoun{
         }
         return '';
     }
-
-    true_data(){
-        return {
-            ita: this.ita,
-            pol: this.pol,
-            case: this.true_case(),
-            plural: this.true_plural(),
-        };
-    }
 }
 
 
@@ -150,7 +154,7 @@ class WordNoun{
 class WordVerb{
     constructor(ita, pol, con = "", forms = {}){
         this.ita = sanitize_word(ita);
-        this.pol = pol.map(w => sanitize_word(w));
+        this.pol = sanitize_word_arr(pol);
         this.con = con;
         this.forms = {};
         this.load_form('normal', forms.normal);
@@ -171,6 +175,10 @@ class WordVerb{
             this.forms
         );
     }
+
+	is_complete(){
+		return this.ita !== "" && this.pol.length > 0;
+	}
 
     to_all_questions(options){
         return [];

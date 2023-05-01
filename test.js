@@ -31,24 +31,23 @@ class TestQuestion_Noun extends TestQuestion{
 		this.is_plural = is_plural;
 
 		if(this.is_pol){
-			this.question = word.pol.join(', ');
 			if(is_plural){
-				this.question += " [l.&nbsp;mnoga]";
-				this.info = "Podaj słowo po włosku, w liczbie mnogiej";
+				this.question = word.pol_plural.join(', ');
 				this.expected = word.true_plural();
 			}else{
-				this.question += " [l.&nbsp;pojedyńcza]"
-				this.info = "Podaj słowo po włosku, w liczbie pojedyńczej";
+				this.question = word.pol.join(', ');
 				this.expected = word.ita;
 			}
+			this.info = "Podaj słowo po włosku.";
 		}else{
 			if(is_plural){
 				this.question = word.true_plural();
+				this.expected = word.pol_plural.join(', ');
 			}else{
 				this.question = word.ita;
+				this.expected = word.pol.join(', ');
 			}
-			this.info = "Podaj słowo po polsku, w <b>liczbie pojedyńczej</b>. (Nie zaimplementowałemm liczby mnogiej po polsku)"
-			this.expected = word.pol.join(', ');
+			this.info = "Podaj słowo po polsku."
 		}
 	}
 
@@ -61,7 +60,11 @@ class TestQuestion_Noun extends TestQuestion{
 				return this.word.ita === answer_sanetized;
 			}
 		}else{
-			return this.word.pol.indexOf(answer_sanetized) !== -1;
+			if(this.is_plural){
+				return this.word.pol_plural.indexOf(answer_sanetized) !== -1;
+			}else{
+				return this.word.pol.indexOf(answer_sanetized) !== -1;
+			}
 		}
 	}
 };

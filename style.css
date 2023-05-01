@@ -101,6 +101,10 @@ input[type="text"]:focus{
     align-items: center;
     background-color: #fff;
 }
+.word_card.incomplete{
+    border: 2px solid rgb(197, 51, 15);
+    background-color: #fff1f1;
+}
 .word_card > .word_options{
     width: 100%;
     display: flex;
@@ -150,23 +154,26 @@ input[type="text"]:focus{
     width: 100%;
     cursor: pointer;
 }
+.word_row.incomplete{
+    background-color: red !important;
+}
 .word_row {
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid red;
-    background-color: rgb(251, 140, 140);
+    border-bottom: 1px solid green;
+    background-color: rgb(158, 251, 140);
     transition: 0.2s;
 }
 .word_row:nth-child(2n){
-    background-color: rgb(246, 116, 116);
+    background-color: rgb(127, 246, 116);
 }
 .word_row:hover{
-    background-color: rgb(142, 246, 116);
+    background-color: rgb(61, 249, 13);
 }
 .word_row > *{
     flex-basis: 0;
     flex-grow: 3;
-    border-left: 1px solid red;
+    border-left: 1px solid green;
     padding-left: 5px;
 }
 .word_row.verb > *{

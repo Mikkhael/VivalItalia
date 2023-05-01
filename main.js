@@ -6,6 +6,7 @@ JSON Words format
 Nouns:[
     ita:string,
     pol:[string],
+    pol_plural:[string],
     case:(f|m|o|"") // o = other, "" = regular
     plural:string // "" = regular
 ]
@@ -32,7 +33,7 @@ function animate_flash_via_transition(elem, value){
 }
 
 let APP_CTX = null;
-
+/*
 const TEST_WORD_JSON = `
     {
         "nouns": [
@@ -51,16 +52,17 @@ const TEST_WORD_JSON = `
             }}
         ]
     }
-`;
+`;*/
 const EMPTY_JSON = `
     {
         "nouns":[],
         "verbs":[]
     }
 `;
-const default_words_json_url = "";
+const default_words_json_url = "/test_words.json";
 function fetch_words_json(url = default_words_json_url){
-    return new Promise.resolve(TEST_WORD_JSON);
+    //return new Promise.resolve(TEST_WORD_JSON);
+    return fetch(default_words_json_url);
 }
 function get_loacal_words_json(){
     return localStorage?.getItem("words_json") || EMPTY_JSON;
@@ -94,9 +96,6 @@ function export_words_json(json){
 
 ///////// APP ////////////////
 
-
-// app._instance.data.words.nouns.push(new WordNoun("casa", ["dom"]))
-
 const app = Vue.createApp({
     created(){
         this.navs = [
@@ -118,7 +117,17 @@ const app = Vue.createApp({
         this.test_unpassed = [];
     },
     mounted(){
-        this.update_words_json(TEST_WORD_JSON);
+        //this.update_words_json(TEST_WORD_JSON);
+        this.update_words_json(EMPTY_JSON);
+        fetch_words_json().then(res => {
+            // console.log("RESPONSE", res);
+            return res.text();
+        }).then(json => {
+            // console.log("FETCHED JSON", json);
+            this.update_words_json(json);
+        }).catch(err => {
+            console.log("FETCHING ERROR: ", err);
+        });
         console.log("MOUNTED");
         APP_CTX = this;
     },
@@ -215,6 +224,7 @@ const app = Vue.createApp({
                 console.log(this.$refs.word_card_elem);
                 this.$refs.word_card_elem.focus_on_word();
             });
+            this.save_words(); // TODO
         },
 
         ///////////////// TEST /////////////////

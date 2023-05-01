@@ -6,6 +6,9 @@ const WordRow = {
         pol_string(){
             return this.word.pol.join(',');
         },
+		incomplete(){
+			return !this.word.is_complete();
+		}
     },
     methods:{
         edit_request(){
@@ -16,7 +19,7 @@ const WordRow = {
         }
     },
     template: /*html*/`
-        <div class="word_row" :class="type">
+        <div class="word_row" :class="type,{incomplete}">
             <div class="ita">{{word.ita}}</div>
             <div class="pol">{{pol_string}}</div>
             <template v-if="type === 'noun'">

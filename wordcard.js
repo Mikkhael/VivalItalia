@@ -16,8 +16,15 @@ const WordCard = {
     computed:{
         pol_string:{
             get(){ return this.word.pol.join(','); },
-            set(value){ this.word.pol = value.split(','); },
-        }
+            set(value){ this.word.pol = sanitize_word_arr(value.split(',')); },
+        },
+        pol_plural_string:{
+            get(){ return this.word.pol_plural.join(','); },
+            set(value){ this.word.pol_plural = sanitize_word_arr(value.split(','));},
+        },
+		incomplete(){
+			return !this.word.is_complete();
+		}
     },
     methods:{
         update_word(){
@@ -28,7 +35,7 @@ const WordCard = {
         }
     },
     template: /*html*/`
-    <div class="word_card" :class="type">
+    <div class="word_card" :class="type,{incomplete}">
         <div class="word_options">
             <div class="main">
                 <span>Słowo</span>
@@ -44,8 +51,13 @@ const WordCard = {
                     <RadioList v-model:option="word.case" :option_values="[['Auto',''],['Męski','m'],['Żeński','f']]" :soft_option="word.true_case()" />
                 </div>
                 <div>
-                    <span>Liczba mnoga</span>
+                    <span>Włoski - Liczba mnoga</span>
                     <input type="text" v-model="word.plural" :placeholder="word.true_plural()">
+                </div>
+				<div></div>
+                <div>
+                    <span>Polski - Liczba mnoga</span>
+                    <input type="text" v-model="pol_plural_string">
                 </div>
             </template>
             <template v-if="type === 'verb'">

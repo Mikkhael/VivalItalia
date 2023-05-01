@@ -1,0 +1,103 @@
+{
+	"nouns": [
+		{
+			"ita": "amica",
+			"pol": [
+				"przyjaciułka"
+			],
+			"pol_plural": [
+				"przyjaciułki"
+			],
+			"case": "",
+			"plural": ""
+		},
+		{
+			"ita": "amico",
+			"pol": [
+				"przyjaciel"
+			],
+			"pol_plural": [
+				"przyjaciele"
+			],
+			"case": "",
+			"plural": "amici"
+		},
+		{
+			"ita": "cane",
+			"pol": [
+				"pies"
+			],
+			"pol_plural": [
+				"psy"
+			],
+			"case": "m",
+			"plural": ""
+		},
+		{
+			"ita": "gatto",
+			"pol": [
+				"kot",
+				"kocur"
+			],
+			"pol_plural": [
+				"koty",
+				"kocury"
+			],
+			"case": "",
+			"plural": ""
+		}
+	],
+	"verbs": [
+		{
+			"ita": "comprare",
+			"pol": [
+				"kupować"
+			],
+			"con": "are",
+			"forms": {
+				"normal": [
+					"",
+					"",
+					"",
+					"",
+					"",
+					""
+				]
+			}
+		},
+		{
+			"ita": "essere",
+			"pol": [
+				"być"
+			],
+			"con": "-",
+			"forms": {
+				"normal": [
+					"sono",
+					"sei",
+					"e",
+					"siamo",
+					"siete",
+					"sono"
+				]
+			}
+		},
+		{
+			"ita": "mangiare",
+			"pol": [
+				"jeść"
+			],
+			"con": "",
+			"forms": {
+				"normal": [
+					"",
+					"",
+					"mangisima",
+					"",
+					"",
+					""
+				]
+			}
+		}
+	]
+}
