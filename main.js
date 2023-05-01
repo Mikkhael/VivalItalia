@@ -53,6 +53,29 @@ const TEST_WORD_JSON = `
         ]
     }
 `;*/
+
+//////////////// CACHE //////////////
+
+function put_to_local_storage(key, value){
+    if(typeof value != "string"){
+        console.error("BAD STRING FOR KEY: ", key, value);
+        return false;
+    }
+    if(localStorage){
+        localStorage.setItem(key, value)
+        return true;
+    }
+    console.error("Local Storage not supported");
+    return false;   
+}
+
+function get_from_local_storage(key, def = "{}"){
+    return localStorage?.getItem(key) || def; 
+}
+
+
+//////////////// WORDS IMPORT/EXPORT and CACHE /////////////
+
 const EMPTY_JSON = `
     {
         "nouns":[],
@@ -65,18 +88,10 @@ function fetch_words_json(url = default_words_json_url){
     return fetch(default_words_json_url);
 }
 function get_loacal_words_json(){
-    return localStorage?.getItem("words_json") || EMPTY_JSON;
+    return get_from_local_storage("words_json", EMPTY_JSON);
 }
 function save_loacl_words_json(json){
-    if(typeof json != "string"){
-        console.error("BAD JSON");
-        return false;
-    }
-    if(localStorage){
-        localStorage.setItem("words_json", json)
-        return true;
-    }
-    return false;
+    put_to_local_storage("words_json", json);
 }
 function export_words_json(json){
     if(typeof json != "string"){
@@ -93,6 +108,20 @@ function export_words_json(json){
 }
 
 
+
+///////////// OPTIONS CACHE ////////////
+
+function save_options_cache(options){
+    console.log("SAVE OPTIONS", options);
+    const json = JSON.stringify(options);
+    put_to_local_storage("options", json);
+}
+function load_options_cache(options){
+    const json = get_from_local_storage("options", "{}");
+    const new_options = JSON.parse(json);
+    console.log("LOAD OPTIONS", new_options);
+    Object.assign(options, new_options);
+}
 
 ///////// APP ////////////////
 
@@ -112,6 +141,17 @@ const app = Vue.createApp({
             ['Wszystkie', 'all', 'Słowa dobierane są losowo z wszystkich w bazie danych'],
             ['Krótkie Serie', 'batch', 'Słowa dobierane będą z mniejszych podzbiorów wszystkich słów. Dopiero po poprawnej odpowiedzi na wszystkie słowa z serii losowana jest nowa seria'],
         ];
+        this.irregular_levels = [
+            ['Brak', 0],
+            ['Tylko Nieregularne', 1],
+            ['Losowo', 2],
+            ['Wszystkie', 3],
+        ]
+
+        this.true_falses = [
+            ['Tak', true],
+            ['Nie', false]
+        ]
 
         this.test_pool_unpassed = [];
         this.test_unpassed = [];
@@ -120,14 +160,15 @@ const app = Vue.createApp({
         //this.update_words_json(TEST_WORD_JSON);
         this.update_words_json(EMPTY_JSON);
         fetch_words_json().then(res => {
-            // console.log("RESPONSE", res);
             return res.text();
         }).then(json => {
-            // console.log("FETCHED JSON", json);
             this.update_words_json(json);
         }).catch(err => {
             console.log("FETCHING ERROR: ", err);
         });
+
+        load_options_cache(this.options);
+
         console.log("MOUNTED");
         APP_CTX = this;
     },
@@ -135,9 +176,13 @@ const app = Vue.createApp({
         return {
             nav: 'test',
             options: {
-                questions_lang: "all",
-                questions_pool_type: "all",
-                questions_pool_size: 0
+                lang: "all",
+                pool_type: "all",
+                pool_size: 0,
+                do_nouns: true,
+                do_verbs: true,
+                nouns_plural_level: 3, // 0-none, 1-irregular, 2-random, 3-all
+                verbs_con_level: 3,
             },
             test_started: false,
             test_is_all: false,
@@ -157,6 +202,14 @@ const app = Vue.createApp({
             on_card_type: "",
             word_to_insert: null,
         };
+    },
+    watch:{
+        options:{
+            handler(new_value){
+                save_options_cache(new_value);
+            },
+            deep: true
+        }
     },
     computed:{
         out_words_json(){
@@ -282,11 +335,11 @@ const app = Vue.createApp({
 
         regenerate_pool(){
             
-            if(this.options.questions_pool_type === "all"){
+            if(this.options.pool_type === "all"){
                 this.test_pool_unpassed = this.test_unpassed;
                 this.test_unpassed = [];
             }else{
-                this.test_pool_unpassed = this.test_unpassed.extract_random(+this.options.questions_pool_size);
+                this.test_pool_unpassed = this.test_unpassed.extract_random(+this.options.pool_size);
             }
             console.log("REGENERATED", this.test_pool_unpassed, this.test_unpassed);
             return this.test_pool_unpassed.length === 0;
@@ -347,15 +400,43 @@ const app = Vue.createApp({
                 <legend title="Określa, w jakim języku podawane będą słowa, które należy przetłumaczyć">
                     Język pytań
                 </legend>
-                <RadioList v-model:option="options.questions_lang" :option_values="questions_langs" />
+                <RadioList v-model:option="options.lang" :option_values="questions_langs" />
             </fieldset>
             
             <fieldset>
                 <legend title="Określa, z jakiej puli dobierane będą słowa">
                     Pule Pytań
                 </legend>
-                <RadioList v-model:option="options.questions_pool_type" :option_values="questions_pool_types" />
-                <p>Rozmiar puli: <input type="number" v-model="options.questions_pool_size" :disabled="options.questions_pool_type === 'all'"></p>
+                <RadioList v-model:option="options.pool_type" :option_values="questions_pool_types" />
+                <p>Rozmiar puli: <input type="number" v-model="options.pool_size" :disabled="options.pool_type === 'all'" min="1"></p>
+            </fieldset>
+            
+            <fieldset>
+                <legend>
+                    Rzeczowniki
+                </legend>
+                <p>
+                    Testuj Rzeczowniki:
+                    <RadioList v-model:option="options.do_nouns" :option_values="true_falses" />
+                </p>
+                <p>
+                    Liczby parzyste:
+                    <RadioList v-model:option="options.nouns_plural_level" :option_values="irregular_levels" />
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>
+                    Czasowniki
+                </legend>
+                <p>
+                    Testuj Czasowniki:
+                    <RadioList v-model:option="options.do_verbs" :option_values="true_falses" />
+                </p>
+                <p>
+                    Odmiana przez osoby:
+                    <RadioList v-model:option="options.verbs_con_level" :option_values="irregular_levels" />
+                </p>
             </fieldset>
         </div>
 

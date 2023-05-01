@@ -58,7 +58,7 @@ function insert_word_sorted(words, word){
 function create_empty_word(type){
     switch(type){
         case "noun": return new WordNoun();
-        case "verb": return new WordVerb('', []);
+        case "verb": return new WordVerb();
     }
     return null;
 }
@@ -103,16 +103,25 @@ class WordNoun{
 		if(!this.is_complete()){
 			return [];
 		}
-        // if(this.plural){
-            return [
-                new TestQuestion_Noun(this, options.questions_lang, true),
-                new TestQuestion_Noun(this, options.questions_lang, false),
-            ];
-        // }else{
-        //     return [
-        //         new TestQuestion_Noun(this, options.questions_lang, Math.random() > 0.5),
-        //     ];
-        // }
+		let res = [new TestQuestion_Noun(this, options.lang, false)];
+		const add_plural = () => {
+			res.push(new TestQuestion_Noun(this, options.lang, true));
+		}
+		switch(options.nouns_plural_level){
+			case 0: return res;
+			case 1: {
+				if(this.plural !== "") add_plural();
+				return res;
+			}
+			case 2: {
+				if(Math.random() <= 0.5) add_plural();
+				return res;
+			}
+			case 3: {
+				add_plural();
+				return res;
+			}
+		}
     }
 
     generate_regular_case(){
@@ -152,7 +161,7 @@ class WordNoun{
 //// VERBS
 
 class WordVerb{
-    constructor(ita, pol, con = "", forms = {}){
+    constructor(ita = '', pol = [], con = "", forms = {}){
         this.ita = sanitize_word(ita);
         this.pol = sanitize_word_arr(pol);
         this.con = con;
@@ -185,15 +194,27 @@ class WordVerb{
 		if(!this.is_complete()){
 			return [];
 		}
-        return [
-			new TestQuestion_Verb(this, options.questions_lang, "inf"),
-			new TestQuestion_Verb(this, options.questions_lang, "normal", 0),
-			new TestQuestion_Verb(this, options.questions_lang, "normal", 1),
-			new TestQuestion_Verb(this, options.questions_lang, "normal", 2),
-			new TestQuestion_Verb(this, options.questions_lang, "normal", 3),
-			new TestQuestion_Verb(this, options.questions_lang, "normal", 4),
-			new TestQuestion_Verb(this, options.questions_lang, "normal", 5),
-		];
+		let res = [new TestQuestion_Verb(this, options.lang, "inf")];
+		const add_con = (form, persons) => {
+			for(let i of persons){
+				res.push(new TestQuestion_Verb(this, options.lang, form, i));
+			}
+		}
+		switch(options.verbs_con_level){
+			case 0: return res;
+			case 1: {
+				if(this.true_con() === "-") add_con("normal", [0,1,2,3,4,5]);
+				return res;
+			}
+			case 2: {
+				add_con("normal", [0,1,2,3,4,5].filter(x => Math.random() <= 1/6));
+				return res;
+			}
+			case 3: {
+				add_con("normal", [0,1,2,3,4,5]);
+				return res;
+			}
+		}
     }
 
     true_con(){
@@ -203,7 +224,7 @@ class WordVerb{
         if(this.ita.slice(-3) === "are"){
             return "are";
         }
-        return "";
+        return "-";
     }
 
     true_form_normal(){
