@@ -89,22 +89,15 @@ class WordNoun{
         );
     }
 
-    to_question(rev, plural, article){
-        const options = {};
-        options.plural = plural;
-        if(article) options.article = ["un"];
-        return new Question("noun", rev, plural ? this.true_plural() : this.ita, this.pol, options);
-    }
-
     to_all_questions(options){
         if(this.plural){
             return [
-                this.to_question(question_gen_rev(options), true, false),
-                this.to_question(question_gen_rev(options), false, false),
+                new TestQuestion_Noun(this, options.questions_lang, true),
+                new TestQuestion_Noun(this, options.questions_lang, false),
             ];
         }else{
             return [
-                this.to_question(question_gen_rev(options), Math.random() > 0.5, false),
+                new TestQuestion_Noun(this, options.questions_lang, Math.random() > 0.5),
             ];
         }
     }

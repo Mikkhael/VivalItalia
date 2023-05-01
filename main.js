@@ -28,8 +28,8 @@ const TEST_WORD_JSON = `
     {
         "nouns": [
             {"ita": "gatto", "pol":["kot", "kocur"]},
-            {"ita": "amico", "pol":["przyjaciel"], "plural":"amici"},
-            {"ita": "amica", "pol":["przyjaciułka"]},
+            {"ita": "amico", "pol":["przyjaciel","kolega"], "plural":"amici"},
+            {"ita": "amica", "pol":["przyjaciułka","koleżanka"]},
             {"ita": "cane", "pol":["pies"], "case":"m"}
         ],
         "verbs": [
@@ -75,7 +75,8 @@ function export_words_json(json){
     const data_url = "data:text/json;charset=utf-8," + encodeURIComponent(json);
     const a_elem = document.createElement('a');
     a_elem.setAttribute('href', data_url);
-    a_elem.setAttribute('download', `words ${new Date().toISOString()}.json`);
+    a_elem.setAttribute("target", "about:blank");
+    // a_elem.setAttribute('download', `words ${new Date().toISOString()}.json`);
     a_elem.click();
     return true;
 }
@@ -104,6 +105,8 @@ const app = Vue.createApp({
             ['Krótkie Serie', 'batch', 'Słowa dobierane będą z mniejszych podzbiorów wszystkich słów. Dopiero po poprawnej odpowiedzi na wszystkie słowa z serii losowana jest nowa seria'],
         ];
 
+        this.test_pool_unpassed = [];
+        this.test_unpassed = [];
     },
     mounted(){
         this.update_words_json(TEST_WORD_JSON);
@@ -119,13 +122,10 @@ const app = Vue.createApp({
                 questions_pool_size: 0
             },
             test_started: false,
-            test_pool_unpassed: [],
-            test_passed: [],
-            test_unpassed: [],
             test_index: 0,
-            test_question: "",
+            test_question_ref: null,
             test_answer: "",
-            test_info: "",
+            test_log: "",
 
             words: {
                 nouns: [],
@@ -164,7 +164,9 @@ const app = Vue.createApp({
         },
         import_words(){
             const json = prompt("Wklej JSON słów do zaimportowania", "");
-            this.update_words_json(json);
+            if(json){
+                this.update_words_json(json);
+            }
         },
 
         update_words_json(words_json){
@@ -204,6 +206,8 @@ const app = Vue.createApp({
             });
         },
 
+        ///////////////// TEST /////////////////
+
         next_question(){
             console.log("NEXT QUESTION");
 
@@ -211,67 +215,35 @@ const app = Vue.createApp({
                 const all_passed = this.regenerate_pool();
                 if(all_passed){
                     console.log("ALL PASSED");
-                    this.test_info = "Wszystkie wyrazy zostały odgadnięte !!!";
+                    this.test_log = "Wszystkie wyrazy zostały odgadnięte !!!";
                     return true;
                 }
             }
 
-            this.test_index = Math.floor(Math.random() * this.test_pool_unpassed.length);
-            this.display_question(this.test_pool_unpassed[this.test_index]);
-        },
-
-        display_question(question){
-            console.log("NEW QUESTION", question);
+            this.test_index = this.test_pool_unpassed.random_index();
+            this.test_question_ref = this.test_pool_unpassed[this.test_index];
             this.test_answer = "";
-            if(question.type == "noun"){
-                if(question.rev){
-                    this.test_question = question.pol.join(', ');
-                    if(question.plural){
-                        this.test_question += " [liczba mnoga]";
-                    }
-                }else{
-                    this.test_question = question.ita;
-                }
-                // this.test_info = "noun";
-            }else{
-                // this.test_info = "Verb";
-            }
+            this.$nextTick(() => {
+                this.$refs.answer_elem.focus();
+            });
         },
 
-        pass_question(){
-            this.test_pool_unpassed.splice(this.test_index, 1);
-            this.test_index = -1;
+        pass_question(correct){
+            if(correct){
+                this.test_log = "Poprawnie";
+                this.test_pool_unpassed.splice(this.test_index, 1);
+            }else{
+                this.test_log = "Niepoprawnie";
+            }
+            this.next_question();
+            // this.test_index = -1;
+            // this.test_question_ref = null;
         },
 
         check_answer(){
             const answer = this.test_answer.trim();
-            const question = this.test_pool_unpassed[this.test_index];
-            if(question.type === "noun"){   
-                if(question.rev){
-                    if(answer === question.ita){
-                        this.test_info = "Poprawnie";
-                        this.pass_question();
-                        this.next_question();
-                        return true;
-                    }else{
-                        this.test_info = "Niepoprawnie";
-                        this.next_question();
-                        return false;
-                    }
-                }else{
-                    if(question.pol.indexOf(answer) !== -1){
-                        this.test_info = "Poprawnie";
-                        this.pass_question();
-                        this.next_question();
-                        return true;
-                    }else{
-                        this.test_info = "Niepoprawnie";
-                        this.next_question();
-                        return false;
-                    }
-
-                }
-            }
+            const res = this.test_question_ref.check_answer(answer);
+            this.pass_question(res);
         },
 
         regenerate_pool(){
@@ -280,7 +252,7 @@ const app = Vue.createApp({
                 this.test_pool_unpassed = this.test_unpassed;
                 this.test_unpassed = [];
             }else{
-                this.test_pool_unpassed = extract_random_elements_from_array(this.test_unpassed, this.options);
+                this.test_pool_unpassed = this.test_unpassed.extract_random(+this.options.questions_pool_size);
             }
             console.log("REGENERATED", this.test_pool_unpassed, this.test_unpassed);
             return this.test_pool_unpassed.length === 0;
@@ -288,14 +260,18 @@ const app = Vue.createApp({
 
         start_test(){
             this.test_started = true;
-            this.test_info = "";
-            this.test_question = "";
+            this.test_log = "";
+            this.test_index = -1;
+            this.test_question_ref = null;
             this.test_answer = "";
+            this.test_pool_unpassed = [];
 
             this.test_unpassed = convert_words_to_questions(this.words.nouns, this.options);
             console.log("STARTED", this.test_unpassed);
             this.next_question();
         },
+
+        ////////////////////////////////////
 
         clicked_nav(value){
             console.log('NAV', value);
@@ -392,20 +368,31 @@ const app = Vue.createApp({
 
         </div>
         
-        <div id="nav_test" v-if="nav === 'test'">
+        <div id="nav_test" class="test_container" v-if="nav === 'test'">
 
             <template v-if="test_started">
 
-                <p class="question">
-                    {{test_question}}
-                </p>
+                <div class="question">
+                    <span v-html="test_question_ref.question"></span>
+                </div>
 
-                <input type="text" class="answer" ref="answer_elem" v-model="test_answer">
-                <button class="quess_btn" @click="check_answer">Zgadnij</button>
-                
-                <p>
-                    Info: {{test_info}}
-                </p>
+                <div class="question_info">
+                    <span v-html="test_question_ref.info"></span>
+                </div>
+
+                <div class="answer_container">
+                    
+                    <input type="text" class="answer"
+                            ref="answer_elem"
+                            v-model="test_answer"
+                            @keydown.enter="check_answer">
+                    
+                    <button class="quess_btn" @click="check_answer">Enter</button>
+                </div>
+
+                <div class="question_log">
+                    <span v-html="test_log"></span>
+                </div>
 
             </template>
             <template v-else>
