@@ -123,6 +123,49 @@ function load_options_cache(options){
     Object.assign(options, new_options);
 }
 
+////////////// OTHER /////////////
+
+////////// ACCENT //////////
+
+const ACCENT_LOOKUP = {
+    "a": "à",
+    "e": "è",
+    "i": "ì",
+    "o": "ò",
+    "u": "ù",
+    "A": "À",
+    "E": "È",
+    "I": "Ì",
+    "O": "Ò",
+    "U": "Ù",
+    "è": "é",
+    "ò": "ó",
+    "È": "É",
+    "Ò": "Ó",
+};
+
+function handle_accent_event(event){
+    if(try_append_accent(event.target)){
+        // console.log(event);
+        event.preventDefault();
+        event.target.dispatchEvent(new InputEvent("input"));
+    }
+}
+
+function try_append_accent(target){
+    if(!target) return false;
+    if(target.tagName !== "INPUT") return false;
+    if(target.getAttribute("type") !== "text") return false;
+    if(target.value.length <= 0) return false;
+    const last_char = target.value[target.value.length - 1];
+    const lookup_res = ACCENT_LOOKUP[last_char];
+    if(!lookup_res) return false;
+    target.value = target.value.slice(0, -1) + lookup_res;
+    return true;
+}
+
+
+
 ///////// APP ////////////////
 
 const app = Vue.createApp({
@@ -169,6 +212,14 @@ const app = Vue.createApp({
 
         load_options_cache(this.options);
 
+        document.addEventListener("keydown", (event) => {
+            // console.log("KEY", event.key)
+            if(event.key === this.options.accent_key){
+                // console.log("ACCENT");
+                handle_accent_event(event);
+            }
+        });
+
         console.log("MOUNTED");
         APP_CTX = this;
     },
@@ -183,6 +234,8 @@ const app = Vue.createApp({
                 do_verbs: true,
                 nouns_plural_level: 3, // 0-none, 1-irregular, 2-random, 3-all
                 verbs_con_level: 3,
+
+                accent_key: "`",
             },
             test_started: false,
             test_is_all: false,
@@ -355,10 +408,20 @@ const app = Vue.createApp({
             this.test_answer = "";
             this.test_pool_unpassed = [];
 
-            const verbs_questions = convert_words_to_questions(this.words.verbs, this.options);
-            const nouns_questions = convert_words_to_questions(this.words.nouns, this.options);
+            const test_unpassed = [];
 
-            this.test_unpassed = [...verbs_questions, ...nouns_questions];
+            if(this.options.do_nouns){
+                const nouns_questions = convert_words_to_questions(this.words.nouns, this.options);
+                test_unpassed.push(...nouns_questions);
+            }
+
+            if(this.options.do_verbs){
+                const verbs_questions = convert_words_to_questions(this.words.verbs, this.options);
+                test_unpassed.push(...verbs_questions);
+            }
+            
+
+            this.test_unpassed = test_unpassed;
             console.log("STARTED", this.test_unpassed);
             this.next_question();
         },
@@ -396,6 +459,23 @@ const app = Vue.createApp({
     <main>
 
         <div id="nav_options" v-if="nav === 'options'">
+            <fieldset>
+                <legend>
+                    Ogólne
+                </legend>
+                <p>
+                    Przycisk akcentu: 
+                    <input v-model="options.accent_key" />
+                    <br>
+                    Można wstawiać włoskie akcenty nad samogłoskami jak [è] i [à], 
+                    <b>bez potrzeby posiadania włsokiej klawiatury</b>. 
+                    Można napisać literę bez akcentu, 
+                    a następnie nacisnąć odpowiedni klawisz.
+                    Aby wyknać akcent w prawą stronę, należy nacisnąć go dwukrotnie.
+                    Domyślnie jest to "Backtick" (ten pod tyldą).
+                </p>
+            </fieldset>
+
             <fieldset>
                 <legend title="Określa, w jakim języku podawane będą słowa, które należy przetłumaczyć">
                     Język pytań

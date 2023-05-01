@@ -19,7 +19,7 @@ class TestQuestion {
 function lang_to_is_pol(lang){
 	switch(lang){
 		case "ita": return false;
-		case "pol": return truefalse;
+		case "pol": return true;
 		default:    return Math.random() > 0.5;
 	} 
 }

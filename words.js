@@ -78,7 +78,7 @@ class WordNoun{
     }
 
     true_case(){
-        console.log("C ", this.ita);
+        // console.log("C ", this.ita);
         return this.case || this.generate_regular_case();
     }
     true_plural(){
