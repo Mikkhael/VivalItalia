@@ -20,6 +20,10 @@ Verb:[
         ]
     }
 ]
+Adj:[
+    ita:string,
+    pol:[string]
+]
 Other:[
     ita:string,
     pol:[string]
@@ -67,10 +71,10 @@ function fetch_words_json(url = default_words_json_url){
     return fetch(url);
 }
 function get_loacal_words_json(){
-    return get_from_local_storage("words_json", EMPTY_JSON);
+    return get_from_local_storage("words_json", "{}");
 }
 function save_loacl_words_json(json){
-    put_to_local_storage("words_json", json);
+    return put_to_local_storage("words_json", json);
 }
 function encode_json(json){
     return "data:text/json;charset=utf-8," + encodeURIComponent(json);
@@ -209,8 +213,6 @@ const app = Vue.createApp({
         this.test_unpassed = [];
     },
     mounted(){
-        //this.update_words_json(TEST_WORD_JSON);
-        this.update_words_json(EMPTY_JSON);
         fetch_words_json(custom_words_json_url || default_words_json_url).then(res => {
             return res.text();
         }).then(json => {
@@ -244,6 +246,7 @@ const app = Vue.createApp({
                 pool_size: 10,
                 do_nouns: true,
                 do_verbs: true,
+                do_adjs:  true,
                 do_other: true,
                 nouns_plural_level: 3, // 0-none, 1-irregular, 2-random, 3-all
                 verbs_con_level: 3,
@@ -261,12 +264,14 @@ const app = Vue.createApp({
             words: {
                 noun: [],
                 verb: [],
+                adj:  [],
                 other:[],
             },
             current_list_word_type: 'noun',
             words_excluded: {
                 noun:  new Set(),
                 verb:  new Set(),
+                adj:   new Set(),
                 other: new Set(),
             },
             last_excluded_index: -1,
@@ -292,6 +297,7 @@ const app = Vue.createApp({
             switch (this.current_list_word_type){
                 case 'noun':  return 'Rzeczownik';
                 case 'verb':  return 'Czasownik';
+                case 'adj':   return 'Przymiotnik';
                 case 'other': return 'Inne';
             }
         }
@@ -321,12 +327,13 @@ const app = Vue.createApp({
         },
 
         set_on_card(type = '', word = {}){
-            console.log("SET CARD", type, word.ita);
+            console.log("SET CARD", type, word.ita, this.on_card_ref === word);
             this.on_card_ref = word;
             this.on_card_type = type;
             if(type !== ''){
                 this.$nextTick(() => {
-                    console.log(this.$refs.word_card_elem);
+                    // console.log(this.$refs.word_card_elem);
+                    this.$refs.word_card_elem.force_update();
                     this.$refs.word_card_elem.focus_on_word();
                 });
             }
@@ -492,6 +499,7 @@ const app = Vue.createApp({
 
             const add_questions_for_category = (condition, type) => {
                 if(condition){
+                    console.log(type, condition)
                     const questions = convert_words_to_questions(this.words[type], this.options, this.words_excluded[type]);
                     test_unpassed.push(...questions);
                 }
@@ -499,6 +507,7 @@ const app = Vue.createApp({
 
             add_questions_for_category(this.options.do_nouns, "noun");
             add_questions_for_category(this.options.do_verbs, "verb");
+            add_questions_for_category(this.options.do_adjs,  "adj");
             add_questions_for_category(this.options.do_other, "other");
 
             this.test_unpassed = test_unpassed;
@@ -620,6 +629,16 @@ const app = Vue.createApp({
 
             <fieldset>
                 <legend>
+                    Przymiotniki
+                </legend>
+                <p>
+                    Testuj przymiotniki:
+                    <RadioList v-model:option="options.do_adjs" :option_values="true_falses" />
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>
                     Inne
                 </legend>
                 <p>
@@ -648,7 +667,7 @@ const app = Vue.createApp({
             </button>
             <RadioList 
                 v-model:option="current_list_word_type"
-                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb'], ['Inne', 'other']]"
+                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb'], ['Przymiotniki','adj'], ['Inne', 'other']]"
             />
 
             <button class="add_word"
@@ -720,7 +739,6 @@ const app = Vue.createApp({
         <WordCard 
             @click.stop=""
             :type='on_card_type'
-            :key="on_card_ref?.ita" 
             :sourceWord="on_card_ref"
             @update-word="(n) =>        { update_on_card(on_card_type, n); set_on_card(); }"
             @request-add="(n) =>        { update_on_card(on_card_type, n); add_word(on_card_type);}"

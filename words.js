@@ -9,44 +9,55 @@ function sanitize_word_arr(arr){
 	return arr.map(x => sanitize_word(x)).filter(x => x != "");
 }
 
+const WORDS_DATA_TYPES = ["noun", "verb", "adj", "other"];
 function parse_words_json(words_json){
     let words_data = JSON.parse(words_json);
-    words_data.noun  = sort_words(parse_words_data_nouns(words_data.noun  || []));
-    words_data.verb  = sort_words(parse_words_data_verbs(words_data.verb  || []));
-    words_data.other = sort_words(parse_words_data_other(words_data.other || []));
-
+	for(let type of WORDS_DATA_TYPES){
+		words_data[type] = sort_words(
+			parse_word_data(type, words_data[type] || [])
+		);	
+	}
     return words_data;
+}
+
+function parse_word_data(type, words){
+	switch(type){
+		case "noun": {
+			return words.map(w => new WordNoun(
+				w.ita,
+				w.pol,
+				w.pol_plural,
+				w.case,
+				w.plural
+			));
+		}
+		case "verb": {
+			return words.map(w => new WordVerb(
+				w.ita,
+				w.pol,
+				w.con,
+				w.forms
+			));
+		}
+		case "adj": {
+			return words.map(w => new WordAdj(
+				w.ita,
+				w.pol
+			));
+		}
+		case "other": {
+			return words.map(w => new WordOther(
+				w.ita,
+				w.pol
+			));
+		}
+	}
 }
 
 function generate_words_json(words_data){
     let words_json = JSON.stringify(words_data);
     return words_json.toString();
 }
-
-function parse_words_data_nouns(words){
-    return words.map(w => new WordNoun(
-        w.ita,
-        w.pol,
-		w.pol_plural,
-        w.case,
-        w.plural
-    ));
-}
-function parse_words_data_verbs(words){
-    return words.map(w => new WordVerb(
-        w.ita,
-        w.pol,
-        w.con,
-        w.forms
-    ));
-}
-function parse_words_data_other(words){
-    return words.map(w => new WordOther(
-        w.ita,
-        w.pol
-    ));
-}
-
 
 function sort_words(words){
     return words.sort((a, b) => {
@@ -55,7 +66,7 @@ function sort_words(words){
 }
 
 function insert_word_sorted(words, word){
-    console.log("INSERT WORDS", words);
+    console.log("INSERT WORDS", words, word);
     let index = words[0].findIndex(w => w.ita > word.ita);
     if(index < 0) index = words[0].length;
     words[0].splice(index, 0, word.clone());
@@ -63,8 +74,10 @@ function insert_word_sorted(words, word){
 }
 
 function create_empty_word(type){
+	console.log(type);
     switch(type){
         case "noun":  return new WordNoun();
+        case "adj":   return new WordAdj();
         case "verb":  return new WordVerb();
         case "other": return new WordOther();
     }
@@ -72,6 +85,37 @@ function create_empty_word(type){
 }
 
 
+function generate_regular_case(ita){
+	const last_char = ita[ita.length - 1];
+	if(last_char === 'o'){
+		return 'm'
+	}else if(last_char === 'a'){
+		return 'f'
+	}
+	return '';
+}
+
+function generate_regular_plural(ita){
+	const last_char = ita[ita.length - 1];
+	const pre_last = ita.length >= 2 ? ita[ita.length - 2] : "";
+	const word_core = ita.slice(0,-1);
+	if(last_char === 'o'){
+		if(pre_last === "c"){
+			return word_core + "hi";
+		}else{
+			return word_core + "i";
+		}
+	}else if(last_char === 'a'){
+		if(pre_last === "c"){
+			return word_core + "he";
+		}else{
+			return word_core + "e";
+		}
+	}else if(last_char === 'e'){
+		return word_core + "i";
+	}
+	return ita;
+}
 
 //// NOUNS
 
@@ -87,10 +131,10 @@ class WordNoun{
 
     true_case(){
         // console.log("C ", this.ita);
-        return this.case || this.generate_regular_case();
+        return this.case || generate_regular_case(this.ita);
     }
     true_plural(){
-        return this.plural || this.generate_regular_plural();
+        return this.plural || generate_regular_plural(this.ita);
     }
 
     clone(){
@@ -104,67 +148,60 @@ class WordNoun{
     }
 
 	is_complete(){
-		return this.ita !== '' && this.pol.length > 0 && this.pol_plural.length > 0;
+		return this.ita !== '' && this.pol.length > 0 &&
+			   this.pol_plural.length > 0 && this.true_case() !== "";
 	}
 
-    to_all_questions(options){
+	is_irregular(){
+		return this.plural !== '';
+	}
+
+	to_all_questions(options){
 		if(!this.is_complete()){
 			return [];
 		}
 		let res = [new TestQuestion_Noun(this, options.lang, false)];
-		const add_plural = () => {
-			res.push(new TestQuestion_Noun(this, options.lang, true));
+		if( (options.nouns_plural_level > 0  && this.is_irregular())  ||
+			(options.nouns_plural_level == 2 && Math.random() <= 0.5) ||
+			(options.nouns_plural_level == 3)){
+				res.push(new TestQuestion_Noun(this, options.lang, true));
 		}
-		switch(options.nouns_plural_level){
-			case 0: return res;
-			case 1: {
-				if(this.plural !== "") add_plural();
-				return res;
-			}
-			case 2: {
-				if(Math.random() <= 0.5) add_plural();
-				return res;
-			}
-			case 3: {
-				add_plural();
-				return res;
-			}
-		}
-    }
-
-    generate_regular_case(){
-        const last_char = this.ita[this.ita.length - 1];
-        if(last_char === 'o'){
-            return 'm'
-        }else if(last_char === 'a'){
-            return 'f'
-        }
-        return '';
-    }
-    
-    generate_regular_plural(){
-        const last_char = this.ita[this.ita.length - 1];
-        const pre_last = this.ita.length >= 2 ? this.ita[this.ita.length - 2] : "";
-        const word_core = this.ita.slice(0,-1);
-        if(last_char === 'o'){
-            if(pre_last === "c"){
-                return word_core + "hi";
-            }else{
-                return word_core + "i";
-            }
-        }else if(last_char === 'a'){
-            if(pre_last === "c"){
-                return word_core + "he";
-            }else{
-                return word_core + "e";
-            }
-        }else if(last_char === 'e'){
-            return word_core + "i";
-        }
-        return '';
-    }
+		return res;
+	}
 }
 
+//// Adjectives
+
+
+class WordAdj{
+    constructor(ita = '', pol = []){
+        this.ita = sanitize_word(ita);
+        this.pol = sanitize_word_arr(pol);
+    }
+
+    clone(){
+        return new WordAdj(
+            this.ita,
+            this.pol
+        );
+    }
+
+	is_complete(){
+		return this.ita !== '' && this.pol.length > 0;
+	}
+
+	is_irregular(){
+		return true;
+	}
+
+	to_all_questions(options){
+		if(!this.is_complete()){
+			return [];
+		}
+		let res = [new TestQuestion_Adj(this, options.lang)];
+		return res;
+	}
+}
 
 //// VERBS
 
@@ -270,7 +307,7 @@ class WordOther{
         return new WordOther(
             this.ita,
             this.pol,
-        );
+        )
     }
 
 	is_complete(){

@@ -138,6 +138,33 @@ function do_arrays_intersect(arr1, arr2){
 	}
 	return false;
 }
+
+class TestQuestion_Adj extends TestQuestion{
+	constructor(word, lang){
+		super("normal", word);
+		this.is_pol = lang_to_is_pol(lang);
+	}
+
+	generate(){
+		if(this.is_pol){
+			this.question = this.word.pol.join(', ');
+			this.answer = this.word.ita;
+			this.expected = this.answer;
+			this.info = "Podaj przymiotnik po włosku."
+		}else{
+			this.question = this.word.ita;
+			this.answer = this.word.pol;
+			this.expected = this.answer.join(', ');
+			this.info = "Podaj przymiotnik po polsku."
+		}
+		this.generated = true;
+	}
+
+	check_answer(answer){
+		const answer_sanetized = answer.trim();
+		return do_arrays_intersect(answer_sanetized, this.answer);
+	}
+};
 class TestQuestion_Other extends TestQuestion{
 	constructor(word, lang){
 		super("normal", word);
@@ -190,6 +217,7 @@ function convert_words_to_questions(words, options, excluded_set){
     let res = [];
     for(let w of words){
 		if(excluded_set.has(w.ita)) continue;
+		console.log(w, w.to_all_questions);
         res.push(...w.to_all_questions(options));
     }
     return res;

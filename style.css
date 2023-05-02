@@ -173,7 +173,7 @@ input[type="text"]:focus{
     cursor: pointer;
 }
 .word_row.incomplete{
-    background-color: red !important;
+    background-color: rgb(255, 170, 0) !important;
 }
 .word_row {
     display: flex;
@@ -182,11 +182,20 @@ input[type="text"]:focus{
     background-color: rgb(158, 251, 140);
     transition: 0.2s;
 }
+.word_row.excluded {
+    background-color: rgb(251, 140, 140);
+}
 .word_row:nth-child(2n){
     background-color: rgb(127, 246, 116);
 }
+.word_row.excluded:nth-child(2n){
+    background-color: rgb(246, 116, 116);
+}
 .word_row:hover{
     background-color: rgb(61, 249, 13);
+}
+.word_row.excluded:hover{
+    background-color: rgb(249, 13, 13);
 }
 .word_row > *{
     flex-basis: 0;

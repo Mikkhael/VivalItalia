@@ -30,6 +30,9 @@ const WordCard = {
 		}
     },
     methods:{
+		force_update(){
+			this.word = this.sourceWord.clone();
+		},
         update_word(){
 			console.log("UPDATE-WORD")
             this.$emit('update-word', this.word.clone());
@@ -93,9 +96,10 @@ const WordCard = {
         <button class="update_word" @click="update_word">Aktualizuj Słowo</button>
 		<p class="manual">
 			<p><b>ENTER + CTRL</b> : zatwierdź zmiany</p>
+			<p><b>ENTER + SHIFT</b> : zatwierdź zmiany i dodaj nowe słowo</p>
 			<p><b>ALT + RIGHT_ARROW</b> : zatwierdź zmiany i przejdź do kolejnego słowa</p>
 			<p><b>ALT + LEFT_ARROW </b> : zatwierdź zmiany i przejdź do poprzedniego słowa</p>
-			<p><b>ESCAPE</b> : porzuć zmian</p>
+			<p><b>ESCAPE</b> : porzuć zmiany</p>
 		</p>
     </div>
     `

@@ -24,7 +24,7 @@ const WordRow = {
         }
     },
     template: /*html*/`
-        <div class="word_row" :class="type,{incomplete: excluded}">
+        <div class="word_row" :class="type,{incomplete,excluded}">
             <div class="ita">{{word.ita}}</div>
             <div class="pol">{{pol_string}}</div>
             <template v-if="type === 'noun'">

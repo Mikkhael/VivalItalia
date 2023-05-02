@@ -158,5 +158,31 @@
 				"dzisiaj wieczorem"
 			]
 		}
+	],
+	"adj": [
+		{
+			"ita": "italiano",
+			"pol": [
+				"włoski"
+			]
+		},
+		{
+			"ita": "lunge",
+			"pol": [
+				"długi"
+			]
+		},
+		{
+			"ita": "nero",
+			"pol": [
+				"czarny"
+			]
+		},
+		{
+			"ita": "rosso",
+			"pol": [
+				"czerwony"
+			]
+		}
 	]
 }
