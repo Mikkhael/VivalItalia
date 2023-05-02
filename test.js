@@ -151,7 +151,7 @@ class TestQuestion_Other extends TestQuestion{
 			this.expected = this.answer;
 			this.info = "Podaj słowo po włosku."
 		}else{
-			this.question = this.ita;
+			this.question = this.word.ita;
 			this.answer = this.word.pol;
 			this.expected = this.answer.join(', ');
 			this.info = "Podaj słowo po polsku."
@@ -178,7 +178,7 @@ Array.prototype.extract_random = function(n = 1){
 	}
 	const res = [];
 	while(n > 0){
-		console.log(res);
+		// console.log(res);
 		res.push(...this.splice(this.random_index(), 1));
 		n--;
 	}
