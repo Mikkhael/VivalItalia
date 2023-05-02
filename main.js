@@ -3,14 +3,14 @@
 /*
 JSON Words format
 
-Nouns:[
+Noun:[
     ita:string,
     pol:[string],
     pol_plural:[string],
     case:(f|m|o|"") // o = other, "" = regular
     plural:string // "" = regular
 ]
-Verbs:[
+Verb:[
     ita:string,
     pol:[string],
     con: ("-" | "are" | "") // "" = autodetect regular
@@ -19,6 +19,10 @@ Verbs:[
             String x6 // "" = regular (according to type) 
         ]
     }
+]
+Other:[
+    ita:string,
+    pol:[string]
 ]
 
 */
@@ -33,27 +37,6 @@ function animate_flash_via_transition(elem, value){
 }
 
 let APP_CTX = null;
-/*
-const TEST_WORD_JSON = `
-    {
-        "nouns": [
-            {"ita": "gatto", "pol":["kot", "kocur"]},
-            {"ita": "amico", "pol":["przyjaciel","kolega"], "plural":"amici"},
-            {"ita": "amica", "pol":["przyjaciułka","koleżanka"]},
-            {"ita": "cane", "pol":["pies"], "case":"m"}
-        ],
-        "verbs": [
-            {"ita": "essere", "pol":["być"], "con":"-", "forms":{
-                "normal": ["sono","sei","e","siamo","siete","sono"]
-            }},
-            {"ita": "comprare", "pol":["kupować"], "con":"are", "forms":{}},
-            {"ita": "mangiare", "pol":["jeść"], "con":"", "forms":{
-                "normal": ["","","mangisima"]
-            }}
-        ]
-    }
-`;*/
-
 //////////////// CACHE //////////////
 
 function put_to_local_storage(key, value){
@@ -78,8 +61,9 @@ function get_from_local_storage(key, def = "{}"){
 
 const EMPTY_JSON = `
     {
-        "nouns":[],
-        "verbs":[]
+        "noun":[],
+        "verb":[],
+        "other":[]
     }
 `;
 const default_words_json_url = "/test_words.json";
@@ -232,6 +216,7 @@ const app = Vue.createApp({
                 pool_size: 0,
                 do_nouns: true,
                 do_verbs: true,
+                do_other: true,
                 nouns_plural_level: 3, // 0-none, 1-irregular, 2-random, 3-all
                 verbs_con_level: 3,
 
@@ -246,8 +231,9 @@ const app = Vue.createApp({
             test_log: "",
 
             words: {
-                nouns: [],
-                verbs: [],
+                noun: [],
+                verb: [],
+                other:[],
             },
             current_list_word_type: 'noun',
 
@@ -270,8 +256,9 @@ const app = Vue.createApp({
         },
         current_list_word_type_pol(){
             switch (this.current_list_word_type){
-                case 'noun': return 'Rzeczownik';
-                case 'verb': return 'Czasownik';
+                case 'noun':  return 'Rzeczownik';
+                case 'verb':  return 'Czasownik';
+                case 'other': return 'Inne';
             }
         }
     },
@@ -303,6 +290,24 @@ const app = Vue.createApp({
             console.log("SET CARD", type, word.ita);
             this.on_card_ref = word;
             this.on_card_type = type;
+            if(type !== ''){
+                this.$nextTick(() => {
+                    console.log(this.$refs.word_card_elem);
+                    this.$refs.word_card_elem.focus_on_word();
+                });
+            }
+        },
+        set_on_card_next(type = '', offset){
+            console.log("SET CARD NEXT", type, offset);
+            const words = this.words[type];
+            const index = words.indexOf(this.on_card_ref);
+            if(index == -1){
+                console.log("NOT FOUND");
+            }
+            let new_index = index + offset;
+            if(new_index >= words.length) new_index = 0;
+            if(new_index < 0) new_index = words.length-1;
+            this.set_on_card(type, words[new_index]);
         },
         update_on_card(type, word){
             console.log("UPD CARD", type, word.ita);
@@ -311,13 +316,13 @@ const app = Vue.createApp({
             }
             if(this.word_to_insert === this.on_card_ref){
                 console.log("INS NEW", type, this.word_to_insert.ita);
-                insert_word_sorted([this.words[type+'s']], this.word_to_insert);
+                insert_word_sorted([this.words[type]], this.word_to_insert);
                 this.word_to_insert = null;
                 return;
             }
         },
         delete_word(type, index){
-            const words = this.words[type+'s'];
+            const words = this.words[type];
             const confirmation = window.confirm("Czy na pewno chcesz usunąć słowo '" + words[index].ita + "' ?");
             if(confirmation){
                 words.splice(index, 1);
@@ -326,10 +331,10 @@ const app = Vue.createApp({
         add_word(type){
             this.word_to_insert = create_empty_word(type);
             this.set_on_card(type, this.word_to_insert);
-            this.$nextTick(() => {
-                console.log(this.$refs.word_card_elem);
-                this.$refs.word_card_elem.focus_on_word();
-            });
+            // this.$nextTick(() => {
+            //     console.log(this.$refs.word_card_elem);
+            //     this.$refs.word_card_elem.focus_on_word();
+            // });
             this.save_words(); // TODO
         },
 
@@ -404,20 +409,25 @@ const app = Vue.createApp({
             this.test_is_all = false;
             this.test_log = "";
             this.test_index = -1;
-            this.test_question_ref = null;
+            this.test_question_ref = new TestQuestion();
             this.test_answer = "";
             this.test_pool_unpassed = [];
 
             const test_unpassed = [];
 
             if(this.options.do_nouns){
-                const nouns_questions = convert_words_to_questions(this.words.nouns, this.options);
-                test_unpassed.push(...nouns_questions);
+                const questions = convert_words_to_questions(this.words.noun, this.options);
+                test_unpassed.push(...questions);
             }
 
             if(this.options.do_verbs){
-                const verbs_questions = convert_words_to_questions(this.words.verbs, this.options);
-                test_unpassed.push(...verbs_questions);
+                const questions = convert_words_to_questions(this.words.verb, this.options);
+                test_unpassed.push(...questions);
+            }
+
+            if(this.options.do_other){
+                const questions = convert_words_to_questions(this.words.other, this.options);
+                test_unpassed.push(...questions);
             }
             
 
@@ -458,7 +468,7 @@ const app = Vue.createApp({
 
     <main>
 
-        <div id="nav_options" v-if="nav === 'options'">
+        <div id="nav_options" class="options_container" v-if="nav === 'options'">
             <fieldset>
                 <legend>
                     Ogólne
@@ -518,6 +528,16 @@ const app = Vue.createApp({
                     <RadioList v-model:option="options.verbs_con_level" :option_values="irregular_levels" />
                 </p>
             </fieldset>
+
+            <fieldset>
+                <legend>
+                    Inne
+                </legend>
+                <p>
+                    Testuj pozostałe wyrazy:
+                    <RadioList v-model:option="options.do_other" :option_values="true_falses" />
+                </p>
+            </fieldset>
         </div>
 
         <div id="nav_words" v-if="nav === 'words'">
@@ -532,7 +552,7 @@ const app = Vue.createApp({
             </button>
             <RadioList 
                 v-model:option="current_list_word_type"
-                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb']]"
+                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb'], ['Inne', 'other']]"
             />
 
             <button class="add_word"
@@ -540,27 +560,14 @@ const app = Vue.createApp({
                 + Nowy {{ current_list_word_type_pol }}
             </button>
             <div class="word_rows">
-                <WordRow v-for="(noun, index) in words[current_list_word_type + 's']"
+                <WordRow v-for="(word, index) in words[current_list_word_type]"
                     :type="current_list_word_type"
-                    :word="noun"
-                    @edit-request="set_on_card(current_list_word_type, noun)"
+                    :word="word"
+                    @edit-request="set_on_card(current_list_word_type, word)"
                     @delete-request="delete_word(current_list_word_type, index)"
                 />
             </div>
             
-            <!-- <button class="add_word"
-                @click="add_word('verb')">
-                + Nowy Czasownik
-            </button>
-            <div class="word_rows">
-                <WordRow v-for="(verb, index) in words.verbs"
-                    type="verb"
-                    :word="verb"
-                    @edit-request="set_on_card('verb', verb)"
-                    @delete-request="delete_word('verb', index)"
-                />
-            </div> -->
-
             <p>
                 {{out_words_json}}
             </p>
@@ -620,7 +627,10 @@ const app = Vue.createApp({
             :type='on_card_type'
             :key="on_card_ref?.ita" 
             :sourceWord="on_card_ref"
-            @update-word="n => {update_on_card(on_card_type, n), set_on_card()}"
+            @update-word="(n) =>        { update_on_card(on_card_type, n); set_on_card(); }"
+            @request-add="(n) =>        { update_on_card(on_card_type, n); add_word(on_card_type);}"
+            @change-word="([n, off]) => { update_on_card(on_card_type, n); set_on_card_next(on_card_type, off); }"
+            @cancel="set_on_card()"
             ref="word_card_elem"
         />
     </div>

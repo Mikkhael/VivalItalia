@@ -6,6 +6,9 @@ const WordCard = {
     ],
     emits:[
         "update-word",
+		"cancel",
+		"change-word",
+		"request-add",
         "delete_word"
     ],
     data(){
@@ -28,14 +31,31 @@ const WordCard = {
     },
     methods:{
         update_word(){
+			console.log("UPDATE-WORD")
             this.$emit('update-word', this.word.clone());
+        },
+        change_word(off){
+			console.log("CHANGE-WORD", off)
+            this.$emit('change-word', [this.word.clone(), off]);
+        },
+		request_add(){
+			console.log("REQUEST-ADD");
+			this.$emit("request-add", this.word.clone());
+		},
+        cancel(){
+            this.$emit('cancel');
         },
         focus_on_word(){
             this.$refs.word_ita_input.focus();
         }
     },
     template: /*html*/`
-    <div class="word_card" :class="type,{incomplete}">
+    <div class="word_card" :class="type,{incomplete}"
+		@keydown.enter.shift.prevent="request_add"
+		@keydown.enter.ctrl.prevent="update_word"
+		@keydown.right.alt.prevent="change_word(1)"
+		@keydown.left.alt.prevent="change_word(-1)"
+		@keydown.escape="cancel">
         <div class="word_options">
             <div class="main">
                 <span>Słowo</span>
@@ -47,17 +67,16 @@ const WordCard = {
             </div>
             <template v-if="type === 'noun'">
                 <div>
+                    <span>Polski - Liczba mnoga</span>
+                    <input type="text" v-model="pol_plural_string">
+                </div>
+                <div>
                     <span>Rodzaj</span>
                     <RadioList v-model:option="word.case" :option_values="[['Auto',''],['Męski','m'],['Żeński','f']]" :soft_option="word.true_case()" />
                 </div>
                 <div>
                     <span>Włoski - Liczba mnoga</span>
                     <input type="text" v-model="word.plural" :placeholder="word.true_plural()">
-                </div>
-				<div></div>
-                <div>
-                    <span>Polski - Liczba mnoga</span>
-                    <input type="text" v-model="pol_plural_string">
                 </div>
             </template>
             <template v-if="type === 'verb'">

@@ -1,6 +1,4 @@
-add Others
 add Adjectives
-preatify options
 cache test state diff
 cache words
 add words link

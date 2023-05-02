@@ -67,7 +67,6 @@ input[type="text"]:focus{
 }
 
 
-
 .radio_list{
     display: flex;
     flex-wrap: wrap;
@@ -92,6 +91,18 @@ input[type="text"]:focus{
 }
 
 
+.options_container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.options_container > *{
+    flex-grow: 1;
+}
+.options_container > fieldset > legend{
+    font-size: 2em;
+    font-weight: bold;
+}
 
 .word_card{
     border: 2px solid rgb(15, 197, 15);

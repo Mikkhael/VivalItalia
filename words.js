@@ -11,8 +11,9 @@ function sanitize_word_arr(arr){
 
 function parse_words_json(words_json){
     let words_data = JSON.parse(words_json);
-    words_data.nouns = sort_words(parse_words_data_nouns(words_data.nouns));
-    words_data.verbs = sort_words(parse_words_data_verbs(words_data.verbs));
+    words_data.noun  = sort_words(parse_words_data_nouns(words_data.noun  || []));
+    words_data.verb  = sort_words(parse_words_data_verbs(words_data.verb  || []));
+    words_data.other = sort_words(parse_words_data_other(words_data.other || []));
 
     return words_data;
 }
@@ -31,12 +32,18 @@ function parse_words_data_nouns(words){
         w.plural
     ));
 }
-function parse_words_data_verbs(word){
-    return word.map(w => new WordVerb(
+function parse_words_data_verbs(words){
+    return words.map(w => new WordVerb(
         w.ita,
         w.pol,
         w.con,
         w.forms
+    ));
+}
+function parse_words_data_other(words){
+    return words.map(w => new WordOther(
+        w.ita,
+        w.pol
     ));
 }
 
@@ -57,8 +64,9 @@ function insert_word_sorted(words, word){
 
 function create_empty_word(type){
     switch(type){
-        case "noun": return new WordNoun();
-        case "verb": return new WordVerb();
+        case "noun":  return new WordNoun();
+        case "verb":  return new WordVerb();
+        case "other": return new WordOther();
     }
     return null;
 }
@@ -249,3 +257,32 @@ class WordVerb{
         return this.forms.normal;
     }
 }
+
+//// OTHER /////
+
+class WordOther{
+    constructor(ita = '', pol = []){
+        this.ita = sanitize_word(ita);
+        this.pol = sanitize_word_arr(pol);
+    }
+
+    clone(){
+        return new WordOther(
+            this.ita,
+            this.pol,
+        );
+    }
+
+	is_complete(){
+		return this.ita !== "" && this.pol.length > 0;
+	}
+
+    to_all_questions(options){
+		if(!this.is_complete()){
+			return [];
+		}
+		let res = [new TestQuestion_Other(this, options.lang)];
+		return res;
+    }
+}
+

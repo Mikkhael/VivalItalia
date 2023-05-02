@@ -138,6 +138,32 @@ function do_arrays_intersect(arr1, arr2){
 	}
 	return false;
 }
+class TestQuestion_Other extends TestQuestion{
+	constructor(word, lang){
+		super("normal", word);
+		this.is_pol = lang_to_is_pol(lang);
+	}
+
+	generate(){
+		if(this.is_pol){
+			this.question = this.word.pol.join(', ');
+			this.answer = this.word.ita;
+			this.expected = this.answer;
+			this.info = "Podaj słowo po włosku."
+		}else{
+			this.question = this.ita;
+			this.answer = this.word.pol;
+			this.expected = this.answer.join(', ');
+			this.info = "Podaj słowo po polsku."
+		}
+		this.generated = true;
+	}
+
+	check_answer(answer){
+		const answer_sanetized = answer.trim();
+		return do_arrays_intersect(answer_sanetized, this.answer);
+	}
+};
 
 Array.prototype.random_index = function(){
 	return Math.floor(Math.random() * this.length);

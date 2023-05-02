@@ -17,12 +17,12 @@ const RadioList = {
 
     template: /*html*/`
     <div class="radio_list">
-        <div v-for="[name, key, title] in option_values" 
+        <button v-for="[name, key, title] in option_values" 
             @click="set_option(key)"
             :title="title" 
             :class="{selected: option == key, soft_selected: soft_option == key}">
                 {{name}}
-        </div>
+        </button>
     </div>
     `
 };

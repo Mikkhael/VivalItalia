@@ -1,5 +1,5 @@
 {
-	"nouns": [
+	"noun": [
 		{
 			"ita": "amica",
 			"pol": [
@@ -34,6 +34,17 @@
 			"plural": ""
 		},
 		{
+			"ita": "colazione",
+			"pol": [
+				"śniadanie"
+			],
+			"pol_plural": [
+				"śniadania"
+			],
+			"case": "",
+			"plural": ""
+		},
+		{
 			"ita": "gatto",
 			"pol": [
 				"kot",
@@ -45,9 +56,20 @@
 			],
 			"case": "",
 			"plural": ""
+		},
+		{
+			"ita": "sera",
+			"pol": [
+				"wieczór"
+			],
+			"pol_plural": [
+				"wieczory"
+			],
+			"case": "",
+			"plural": ""
 		}
 	],
-	"verbs": [
+	"verb": [
 		{
 			"ita": "comprare",
 			"pol": [
@@ -83,6 +105,23 @@
 			}
 		},
 		{
+			"ita": "fare",
+			"pol": [
+				"robić"
+			],
+			"con": "-",
+			"forms": {
+				"normal": [
+					"faccio",
+					"fai",
+					"fà",
+					"fiamo",
+					"fate",
+					"fanno"
+				]
+			}
+		},
+		{
 			"ita": "mangiare",
 			"pol": [
 				"jeść"
@@ -98,6 +137,26 @@
 					""
 				]
 			}
+		}
+	],
+	"other": [
+		{
+			"ita": "domani",
+			"pol": [
+				"jutro"
+			]
+		},
+		{
+			"ita": "e",
+			"pol": [
+				"i"
+			]
+		},
+		{
+			"ita": "stasera",
+			"pol": [
+				"dzisiaj wieczorem"
+			]
 		}
 	]
 }
