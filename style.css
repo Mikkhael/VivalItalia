@@ -155,6 +155,13 @@ input[type="text"]:focus{
     background-color: rgb(15, 197, 15);
 }
 
+.word_card > .manual{
+    width: 100%;
+    font-size: 0.7em;
+}
+.word_card > .manual > *{
+    margin: 0px;
+}
 
 .word_rows{
     display: flex;

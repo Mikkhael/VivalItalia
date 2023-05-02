@@ -95,14 +95,31 @@ function export_words_json(json){
 
 function save_options_cache(options){
     console.log("SAVE OPTIONS", options);
-    const json = JSON.stringify(options);
-    put_to_local_storage("options", json);
+    const options_json = JSON.stringify(options);
+    put_to_local_storage("options", options_json);
 }
+function save_excluded_words_cache(excluded){
+    const new_excluded = {};
+    for(let key in excluded){
+        new_excluded[key] = Array.from(excluded[key]);
+    }
+    const excluded_json = JSON.stringify(new_excluded);
+    put_to_local_storage("excluded", excluded_json);
+}
+
 function load_options_cache(options){
-    const json = get_from_local_storage("options", "{}");
-    const new_options = JSON.parse(json);
+    const options_json = get_from_local_storage("options", "{}");
+    const new_options = JSON.parse(options_json);
     console.log("LOAD OPTIONS", new_options);
     Object.assign(options, new_options);
+
+}
+function load_excluded_words_cache(excluded){
+    const excluded_json = get_from_local_storage("excluded", "{}");
+    const new_excluded = JSON.parse(excluded_json);
+    for(let key in new_excluded){
+        excluded[key] = new Set(new_excluded[key]);
+    }
 }
 
 ////////////// OTHER /////////////
@@ -193,6 +210,7 @@ const app = Vue.createApp({
         });
 
         load_options_cache(this.options);
+        load_excluded_words_cache(this.words_excluded);
 
         document.addEventListener("keydown", (event) => {
             // console.log("KEY", event.key)
@@ -227,13 +245,19 @@ const app = Vue.createApp({
             test_question_ref: null,
             test_answer: "",
             test_log: "",
-
+            
             words: {
                 noun: [],
                 verb: [],
                 other:[],
             },
             current_list_word_type: 'noun',
+            words_excluded: {
+                noun:  new Set(),
+                verb:  new Set(),
+                other: new Set(),
+            },
+            last_excluded_index: -1,
 
             on_card_ref: null,
             on_card_type: "",
@@ -335,6 +359,33 @@ const app = Vue.createApp({
             // });
             this.save_words(); // TODO
         },
+        word_set_exclude(type, index, to_excluded, range, remember_index = true){
+            // console.log("EXCLUDE", type, index, to_excluded, range, remember_index, this.last_excluded_index);
+            const words = this.words[type];
+            if(range){
+                if(this.last_excluded_index !== -1){
+                    let from = Math.max(Math.min(index, this.last_excluded_index), 0);
+                    let to   = Math.min(Math.max(index, this.last_excluded_index), words.length-1);
+                    while(from <= to){
+                        this.word_set_exclude(type, from, to_excluded, false, false);
+                        from++;
+                    }
+                }
+                save_excluded_words_cache(this.words_excluded);
+                return;
+            }
+
+            const words_excluded = this.words_excluded[type];
+            if(to_excluded){
+                words_excluded.add(words[index].ita);
+            }else{
+                words_excluded.delete(words[index].ita);
+            }
+            if(remember_index){
+                this.last_excluded_index = index;
+                save_excluded_words_cache(this.words_excluded);
+            }
+        },
 
         ///////////////// TEST /////////////////
 
@@ -413,21 +464,16 @@ const app = Vue.createApp({
 
             const test_unpassed = [];
 
-            if(this.options.do_nouns){
-                const questions = convert_words_to_questions(this.words.noun, this.options);
-                test_unpassed.push(...questions);
+            const add_questions_for_category = (condition, type) => {
+                if(condition){
+                    const questions = convert_words_to_questions(this.words[type], this.options, this.words_excluded[type]);
+                    test_unpassed.push(...questions);
+                }
             }
 
-            if(this.options.do_verbs){
-                const questions = convert_words_to_questions(this.words.verb, this.options);
-                test_unpassed.push(...questions);
-            }
-
-            if(this.options.do_other){
-                const questions = convert_words_to_questions(this.words.other, this.options);
-                test_unpassed.push(...questions);
-            }
-            
+            add_questions_for_category(this.options.do_nouns, "noun");
+            add_questions_for_category(this.options.do_verbs, "verb");
+            add_questions_for_category(this.options.do_other, "other");
 
             this.test_unpassed = test_unpassed;
             console.log("STARTED", this.test_unpassed);
@@ -540,6 +586,13 @@ const app = Vue.createApp({
 
         <div id="nav_words" v-if="nav === 'words'">
 
+            <p>
+                Poniżej znajduje się lista słów z każdej kategori, które losowane będą do pytać.
+                Słowa można przyciskami <b>Test-</b> oraz <b>Test+</b> wykluczać lub z powrotem wkluczać do puli testowej.
+                <br>
+                (Przytrzymanie <b>SHIFT podczas nasickania przycisków</b> wyklucza wszystkie słowa, pomiędzy klikniętym teraz i poprzednio)
+            </p>
+
             <button class="io_word"
                 @click="export_words()">
                 Eksportuj listę słów
@@ -561,14 +614,12 @@ const app = Vue.createApp({
                 <WordRow v-for="(word, index) in words[current_list_word_type]"
                     :type="current_list_word_type"
                     :word="word"
+                    :excluded="words_excluded[current_list_word_type].has(word.ita)"
                     @edit-request="set_on_card(current_list_word_type, word)"
                     @delete-request="delete_word(current_list_word_type, index)"
+                    @exclude-request="([to_exclude, range]) => word_set_exclude(current_list_word_type, index, to_exclude, range)"
                 />
             </div>
-            
-            <p>
-                {{out_words_json}}
-            </p>
 
         </div>
         

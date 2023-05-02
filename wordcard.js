@@ -91,6 +91,12 @@ const WordCard = {
             </template>
         </div>
         <button class="update_word" @click="update_word">Aktualizuj Słowo</button>
+		<p class="manual">
+			<p><b>ENTER + CTRL</b> : zatwierdź zmiany</p>
+			<p><b>ALT + RIGHT_ARROW</b> : zatwierdź zmiany i przejdź do kolejnego słowa</p>
+			<p><b>ALT + LEFT_ARROW </b> : zatwierdź zmiany i przejdź do poprzedniego słowa</p>
+			<p><b>ESCAPE</b> : porzuć zmian</p>
+		</p>
     </div>
     `
 }

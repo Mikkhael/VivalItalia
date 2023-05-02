@@ -186,9 +186,10 @@ Array.prototype.extract_random = function(n = 1){
 	return res;
 }
 
-function convert_words_to_questions(words, options){
+function convert_words_to_questions(words, options, excluded_set){
     let res = [];
     for(let w of words){
+		if(excluded_set.has(w.ita)) continue;
         res.push(...w.to_all_questions(options));
     }
     return res;
