@@ -106,6 +106,11 @@ function save_excluded_words_cache(excluded){
     const excluded_json = JSON.stringify(new_excluded);
     put_to_local_storage("excluded", excluded_json);
 }
+function save_test_cache(state){
+    console.log("SAVE TEST", state)
+    const json = JSON.stringify(state);
+    put_to_local_storage("test_state", json);
+}
 
 function load_options_cache(options){
     const options_json = get_from_local_storage("options", "{}");
@@ -120,6 +125,11 @@ function load_excluded_words_cache(excluded){
     for(let key in new_excluded){
         excluded[key] = new Set(new_excluded[key]);
     }
+}
+function load_test_cache(){
+    console.log("LOAD TEST");
+    const json = get_from_local_storage("test_state", "{\"index\":-1}");
+    return JSON.parse(json);
 }
 
 ////////////// OTHER /////////////
@@ -211,6 +221,8 @@ const app = Vue.createApp({
 
         load_options_cache(this.options);
         load_excluded_words_cache(this.words_excluded);
+        const test_cache = load_test_cache();
+        this.import_test_state(test_cache);
 
         document.addEventListener("keydown", (event) => {
             // console.log("KEY", event.key)
@@ -228,8 +240,8 @@ const app = Vue.createApp({
             nav: 'test',
             options: {
                 lang: "all",
-                pool_type: "all",
-                pool_size: 0,
+                pool_type: "batch",
+                pool_size: 10,
                 do_nouns: true,
                 do_verbs: true,
                 do_other: true,
@@ -412,6 +424,8 @@ const app = Vue.createApp({
             this.$nextTick(() => {
                 this.$refs.answer_elem.focus();
             });
+
+            save_test_cache(this.export_test_state());
         },
 
         pass_question(correct){
@@ -452,6 +466,18 @@ const app = Vue.createApp({
             return this.test_pool_unpassed.length === 0;
         },
 
+        stop_test(){
+            const res = window.confirm("Czy na pewno zakończyć?");
+            if(res){
+                this.test_started = false;
+                this.test_pool_unpassed = [];
+                this.test_unpassed = [];
+                this.test_index = -1;
+                this.test_question_ref = null;
+                save_test_cache(this.export_test_state());
+            }
+        },
+
         start_test(){
             this.test_started = true;
             this.test_bad = false;
@@ -490,14 +516,33 @@ const app = Vue.createApp({
             animate_flash_via_transition(document.body, "#f16060");
         },
 
+        export_test_state(){
+            return {
+                pool_unpassed: this.test_pool_unpassed,
+                unpassed: this.test_unpassed,
+                started: this.test_started,
+                index: this.test_index
+            }
+        },
+
+        import_test_state(state){
+            this.test_started = state.started || false;
+            this.test_unpassed = state.unpassed || [];
+            this.test_pool_unpassed = state.pool_unpassed || [];
+            this.test_index = state.index;
+            if(this.test_index !== -1){
+                this.test_question_ref = this.test_pool_unpassed[this.test_index];
+            }
+        },
+
         ////////////////////////////////////
 
         clicked_nav(value){
             console.log('NAV', value);
             this.nav = value;
-            if(value != "test"){
-                this.test_started = false;
-            }
+            // if(value != "test"){
+            //     this.test_started = false;
+            // }
         },
 
     },
@@ -653,9 +698,10 @@ const app = Vue.createApp({
                     <span v-html="test_question_ref.expected"></span>
                 </div>
 
-                <!-- <div class="question_log">
-                    <span v-html="test_log"></span>
-                </div> -->
+                <button class="stop_test"
+                        @click="stop_test()">
+                    Zakończ Test
+                </button>
 
             </template>
             <template v-else>
