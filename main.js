@@ -59,17 +59,12 @@ function get_from_local_storage(key, def = "{}"){
 
 //////////////// WORDS IMPORT/EXPORT and CACHE /////////////
 
-const EMPTY_JSON = `
-    {
-        "noun":[],
-        "verb":[],
-        "other":[]
-    }
-`;
+const EMPTY_JSON = `{}`;
+const custom_words_json_url  = SEARCH_PARAMS.get("words_url");
 const default_words_json_url = "/test_words.json";
 function fetch_words_json(url = default_words_json_url){
     //return new Promise.resolve(TEST_WORD_JSON);
-    return fetch(default_words_json_url);
+    return fetch(url);
 }
 function get_loacal_words_json(){
     return get_from_local_storage("words_json", EMPTY_JSON);
@@ -77,12 +72,15 @@ function get_loacal_words_json(){
 function save_loacl_words_json(json){
     put_to_local_storage("words_json", json);
 }
+function encode_json(json){
+    return "data:text/json;charset=utf-8," + encodeURIComponent(json);
+}
 function export_words_json(json){
     if(typeof json != "string"){
         console.error("BAD JSON");
         return false;
     }
-    const data_url = "data:text/json;charset=utf-8," + encodeURIComponent(json);
+    const data_url = encode_json(json);
     const a_elem = document.createElement('a');
     a_elem.setAttribute('href', data_url);
     a_elem.setAttribute("target", "about:blank");
@@ -186,7 +184,7 @@ const app = Vue.createApp({
     mounted(){
         //this.update_words_json(TEST_WORD_JSON);
         this.update_words_json(EMPTY_JSON);
-        fetch_words_json().then(res => {
+        fetch_words_json(custom_words_json_url || default_words_json_url).then(res => {
             return res.text();
         }).then(json => {
             this.update_words_json(json);

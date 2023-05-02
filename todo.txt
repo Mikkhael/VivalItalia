@@ -1,4 +1,3 @@
 add Adjectives
-cache test state diff
-cache words
-add words link
+cache test state
+cache words diff
