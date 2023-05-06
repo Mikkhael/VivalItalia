@@ -5,15 +5,36 @@ function copy_if_array(arr){
     return (arr instanceof Array) ? [...arr] : arr;
 }
 
-class TestQuestion {
-    constructor(type, word){
-		this.type = type;
-		this.word = word;
-    }
-
-	check_answer(answer){
-		return false;
+function convert_to_test_question(question){
+	if(question instanceof TestQuestion){
+		return question;
 	}
+
+	if(question.type === "normal"){
+		switch(question.subtype){
+			case "noun":  Object.setPrototypeOf(question, TestQuestion_Noun.prototype);  break;
+			case "verb":  Object.setPrototypeOf(question, TestQuestion_Verb.prototype);  break;
+			case "adj":   Object.setPrototypeOf(question, TestQuestion_Adj.prototype);   break;
+			case "other": Object.setPrototypeOf(question, TestQuestion_Other.prototype); break;
+			default: {
+				console.error("INVALID QUESTION SUBTYPE", question);
+				return question;
+			}
+		}
+		convert_to_word_type(question.word, question.subtype);
+	}else{
+		console.error("INVALID QUESTION TYPE", question);
+	}
+	return question;
+}
+
+class TestQuestion {
+    constructor(type, subtype, word){
+		this.type = type;
+		this.subtype = subtype;
+		this.word = word;
+
+    }
 };
 
 function lang_to_is_pol(lang){
@@ -26,7 +47,7 @@ function lang_to_is_pol(lang){
 
 class TestQuestion_Noun extends TestQuestion{
 	constructor(word, lang, is_plural){
-		super("normal", word);
+		super("normal", "noun", word);
 		this.is_pol = lang_to_is_pol(lang);
 		this.is_plural = is_plural;
 	}
@@ -72,7 +93,7 @@ const PRONOUNS = [
 ];
 class TestQuestion_Verb extends TestQuestion{
 	constructor(word, lang, form, person = 0){
-		super("normal", word);
+		super("normal", "verb", word);
 		this.is_pol = lang_to_is_pol(lang);
 		this.form = form;
 		this.person = person;
@@ -141,7 +162,7 @@ function do_arrays_intersect(arr1, arr2){
 
 class TestQuestion_Adj extends TestQuestion{
 	constructor(word, lang){
-		super("normal", word);
+		super("normal", "adj", word);
 		this.is_pol = lang_to_is_pol(lang);
 	}
 
@@ -167,7 +188,7 @@ class TestQuestion_Adj extends TestQuestion{
 };
 class TestQuestion_Other extends TestQuestion{
 	constructor(word, lang){
-		super("normal", word);
+		super("normal", "other", word);
 		this.is_pol = lang_to_is_pol(lang);
 	}
 

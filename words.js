@@ -10,6 +10,20 @@ function sanitize_word_arr(arr){
 }
 
 const WORDS_DATA_TYPES = ["noun", "verb", "adj", "other"];
+
+function convert_to_word_type(word, type){
+	switch(type){
+		case "noun":   Object.setPrototypeOf(word, WordNoun.prototype);  break;
+		case "verb":   Object.setPrototypeOf(word, WordVerb.prototype);  break;
+		case "adj":    Object.setPrototypeOf(word, WordAdj.prototype);   break;
+		case "other":  Object.setPrototypeOf(word, WordOther.prototype); break;
+		default: {
+			console.error("INVALID WORD TYPE DURING CONVERSION", word, type);
+		}
+	}
+	return word;
+}
+
 // const WORDS_DATA_TYPES_CLASSES = {
 // 	noun: WordNoun,
 // 	verb: WordVerb,

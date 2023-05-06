@@ -515,6 +515,7 @@ const app = Vue.createApp({
 
             this.test_index = this.test_pool_unpassed.random_index();
             this.test_question_ref = this.test_pool_unpassed[this.test_index];
+            convert_to_test_question(this.test_question_ref);
             if(!this.test_question_ref.generated){
                 this.test_question_ref.generate();
             }
@@ -611,12 +612,12 @@ const app = Vue.createApp({
         },
 
         flash_green(){
-            console.log("GREEN");
+            // console.log("GREEN");
             animate_flash_via_transition(document.body, "#60f16e");
         },
 
         falsh_red(){
-            console.log("RED");
+            // console.log("RED");
             animate_flash_via_transition(document.body, "#f16060");
         },
 
@@ -636,6 +637,7 @@ const app = Vue.createApp({
             this.test_index = state.index;
             if(this.test_index !== -1){
                 this.test_question_ref = this.test_pool_unpassed[this.test_index];
+                convert_to_test_question(this.test_question_ref);
             }
         },
 
