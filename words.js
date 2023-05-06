@@ -30,6 +30,12 @@ function convert_to_word_type(word, type){
 // 	adj: WordAdj,
 // 	other: WordOther
 // }
+
+function copy_words(words){
+	const json = JSON.stringify(words);
+	const res = parse_words_json(json);
+	return res;
+}
 function parse_words_json(words_json){
     let words_data = JSON.parse(words_json);
 	for(let type of WORDS_DATA_TYPES){
@@ -86,15 +92,15 @@ function sort_words(words){
 }
 
 function insert_word_sorted(words, word){
-    console.log("INSERT WORDS", words, word);
+    console.debug("INSERT WORDS", words, word);
     let index = words[0].findIndex(w => w.ita > word.ita);
     if(index < 0) index = words[0].length;
     words[0].splice(index, 0, word.clone());
-    console.log("AFTER INSERT", words);
+    console.debug("AFTER INSERT", words);
 }
 
 function create_empty_word(type){
-	console.log(type);
+	console.debug(type);
     switch(type){
         case "noun":  return new WordNoun();
         case "adj":   return new WordAdj();
@@ -177,17 +183,17 @@ function diff_object_deep(o1, o2, shallow_test = (key) => false){
 }
 
 function merge_object_deep(o, diff, old_key){
-	console.log("MERGE OBJ NEW", old_key, o, diff);
+	console.debug("MERGE OBJ NEW", old_key, o, diff);
 	if(diff === null){
-		console.log("MERGE OBJ NULL");
+		console.debug("MERGE OBJ NULL");
 		return o;
 	}
 	if(typeof(o) !== "object"){
-		console.log("MERGE OBJ DIFF");
+		console.debug("MERGE OBJ DIFF");
 		return diff;
 	}
 	if(diff.shallow){
-		console.log("MERGE OBJ SHALLOW");
+		console.debug("MERGE OBJ SHALLOW");
 		return merge_array_shallow(o, diff);
 	}
 	const res = (o instanceof Array) ? [] : {};
@@ -201,7 +207,7 @@ function merge_object_deep(o, diff, old_key){
 	for(let key in diff.add){
 		res[key] = diff.add[key];
 	}
-	console.log("MERGE OBJ RES", old_key, res, o, diff);
+	console.debug("MERGE OBJ RES", old_key, res, o, diff);
 	return res;
 }
 
@@ -212,46 +218,47 @@ function generate_shallow_test_for_word_type(type){
 }
 
 function diff_words_list(words1, words2, type){
-	console.log("DIFF WORD NEW", type, words1, words2);
+	console.debug("DIFF WORD NEW", type, words1, words2);
 	const itas1 = words1.map(x => x.ita);
 	const itas2 = words2.map(x => x.ita);
 	const words_rem = itas1.filter(x => itas2.indexOf(x) === -1);
-	console.log("DIFF WORD TO REM", words_rem);
+	console.debug("DIFF WORD TO REM", words_rem);
 	const words_add = {};
 	const words_chg = {};
 	for(let word of words2){
 		const index = itas1.indexOf(word.ita);
 		if(index === -1){
-			console.log("DIFF WORD TO ADD ", word.ita);
+			console.debug("DIFF WORD TO ADD ", word.ita);
 			words_add[word.ita] = word;
 		}else{
 			const base_word = words1[index];
 			const diff = diff_object_deep(base_word, word, generate_shallow_test_for_word_type(type));
 			if(diff){
-				console.log("DIFF WORD TO CHG", word.ita);
+				console.debug("DIFF WORD TO CHG", word.ita);
 				words_chg[word.ita] = diff;
 			}
 		}
 	}
 	const is_changed = words_rem.length !== 0 || !is_empty(words_add) || !is_empty(words_chg);
-	console.log("DIFF WORD RES", {words_add, words_chg, words_rem}, words1, words2);
+	console.debug("DIFF WORD RES", {words_add, words_chg, words_rem}, words1, words2);
 	return is_changed ? {words_add, words_chg, words_rem} : null;
 }
 
 function merge_words_list(words, diff, type){
-	console.log("MERGE WORD NEW", type, words, diff);
+	console.debug("MERGE WORD NEW", type, words, diff);
 	if(diff === null){
 		return words;
 	}
 	const res = words.filter(word => diff.words_rem.indexOf(word.ita) === -1);
-	console.log("MERGE WORD AFTER REM", res.map(x => x.ita));
+	console.debug("MERGE WORD AFTER REM", res.map(x => x.ita));
 	const itas = res.map(x => x.ita);
 	for(let key in diff.words_chg){
 		const index = itas.indexOf(key);
 		if(index === -1) continue;
 		
 		res[index] = merge_object_deep(res[index], diff.words_chg[key], key);
-		console.log("MERGE WORD DID CHG", key, res[index], diff.words_chg[key]);
+		convert_to_word_type(res[index], type);
+		console.debug("MERGE WORD DID CHG", key, res[index], diff.words_chg[key]);
 	}
 	for(let key in diff.words_add){
 		const index = itas.indexOf(key);
@@ -259,33 +266,35 @@ function merge_words_list(words, diff, type){
 		// res[key] = merge_object_deep(res[key], diff.words_add[key]);
 		// res[index] = diff.words_add[key];
 		res.push(diff.words_add[key]);
-		console.log("MERGE WORD DID ADD", key, diff.words_add[key]);
+		convert_to_word_type(diff.words_add[key], type);
+		console.debug("MERGE WORD DID ADD", key, diff.words_add[key]);
 	}
-	console.log("MERGE WORD RES", res);
+	console.debug("MERGE WORD RES", res);
 	const res_sorted = sort_words(res);
 	return res_sorted;
 }
 
 function diff_words(w1, w2){
 	const words_diff = {};
-	console.log("DIFF WORDS", w1, w2);
+	console.debug("DIFF WORDS", w1, w2);
 	for(let type of WORDS_DATA_TYPES){
 		const words1 = w1[type] || [];
 		const words2 = w2[type] || [];
-		// console.log("DIFF WORD TYPE", type, words1, words2);
+		// console.debug("DIFF WORD TYPE", type, words1, words2);
 		words_diff[type] = diff_words_list(words1, words2, type);
 		// break;
 	}
+	console.debug("DIFF WORDS RES", words_diff);
 	return words_diff;
 }
 
 function merge_words(words, words_diff){
 	const res = {};
 	for(let type of WORDS_DATA_TYPES){
-		// console.log("MERGE WORD TYPE", type, words, words_diff);
+		// console.debug("MERGE WORD TYPE", type, words, words_diff);
 		res[type] = merge_words_list(words[type], words_diff[type], type);
 		// const json = JSON.stringify(words[type]);
-		// console.log(json);
+		// console.debug(json);
 		// const cpy = JSON.parse(json);
 		// res[type] = merge_words_list(cpy, words_diff[type]);
 		// break;

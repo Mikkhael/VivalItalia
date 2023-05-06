@@ -71,18 +71,21 @@ function fetch_words_json(url = default_words_json_url, signal){
     console.log("SIGNAL", signal);
     return fetch(url, {signal});
 }
-function get_loacal_words_json(){
-    return get_from_local_storage("words_json", "{}");
-}
-function save_loacl_words_json(json){
-    return put_to_local_storage("words_json", json);
+// function get_loacal_words_json(){
+//     return get_from_local_storage("words_json", "{}");
+// }
+// function save_loacl_words_json(json){
+//     return put_to_local_storage("words_json", json);
+// }
+function delete_local_words_diff(){
+    put_to_local_storage("words_diff", "");
 }
 function save_local_words_diff(original, words, warn = false){
     if(warn)
         window.alert("Zapisane zostaną jedynie różice mędzy oryginalną listą słów, a zmodyfikowaną. Jeśli chcesz zachować pełną listę słów, w przypadku np. awarii internetu, skorzystaj z 'Eksportu Słów'");
     const diff = diff_words(original, words);
     const merged = merge_words(original, diff);
-    const diff_json = JSON.stringify(diff);
+    // const diff_json = JSON.stringify(diff);
     const words_json = JSON.stringify(words);
     const merged_json = JSON.stringify(merged);
     const words_sorted = words_json.split('').sort().join('');
@@ -99,9 +102,10 @@ function save_local_words_diff(original, words, warn = false){
     }));
 }
 function load_local_words_diff(original){
-    const diff_json = get_from_local_storage("words_diff");
+    const diff_json = get_from_local_storage("words_diff", "");
+    // console.log(diff_json);
     if(!diff_json){
-        return false;
+        return original;
     }
     const {checked, diff} = JSON.parse(diff_json);
     if(checked){
@@ -264,6 +268,7 @@ const app = Vue.createApp({
                 this.words_fetching_error = err;
                 return;
             }
+            this.update_words_json("{}", true);
             this.words_fetched = true;
         });
 
@@ -348,34 +353,6 @@ const app = Vue.createApp({
             // return generate_words_json({noun: this.words['noun']});
             return generate_words_json(this.words);
         },
-        // words_diff(){
-        //     // const no = this.words_original['noun'];
-        //     // const n2 = this.words['noun'];
-        //     // const diff = diff_words({noun: no}, {noun: n2});
-        //     const diff = diff_words(this.words_original, this.words);
-        //     window.D = diff;
-        //     return diff;
-        // },
-        // words_diff_json(){
-        //     return JSON.stringify(this.words_diff);
-
-        // },
-        // words_merged(){
-        //     // const no = this.words_original['noun'];
-        //     // const d = this.words_diff['noun'];
-        //     // const merged = merge_words({noun: no}, {noun: d});
-        //     const merged = merge_words(this.words_original, this.words_diff);
-        //     window.M = merged;
-        //     return merged;
-        // },
-        // words_merged_json(){
-        //     return JSON.stringify(this.words_merged);
-        // },
-        // check_diff_json(){
-        //     const res = this.words_merged_json.split('').sort().join('') === this.out_words_json.split('').sort().join('');
-        //     console.log("GIT: ", res);
-        //     return res;
-        // },
         current_list_word_type_pol(){
             switch (this.current_list_word_type){
                 case 'noun':  return 'Rzeczownik';
@@ -394,6 +371,15 @@ const app = Vue.createApp({
             if(!res){console.log("Failed saving words");}
             return res;
         },
+        unsave_words(){
+            const res = window.confirm("Czy na pewno chcesz usunąć lokalne zmiany?");
+            if(res){
+                delete_local_words_diff();
+            }
+        },
+        restore_words(){
+            this.words = copy_words(this.words_original);
+        },
         export_words(){
             const res = export_words_json(this.out_words_json);
             if(!res){console.log("Failed exporting words");}
@@ -411,10 +397,15 @@ const app = Vue.createApp({
         },
 
         update_words_json(words_json, change_original = false){
+            console.log("WORDS UPDATE", change_original)
             if(change_original){
                 this.words_original = parse_words_json(words_json);
+                const words_original_copy = parse_words_json(words_json);
+                const merged_words = load_local_words_diff(words_original_copy);
+                this.words = merged_words;
+            }else{
+                this.words = parse_words_json(words_json);
             }
-            this.words = parse_words_json(words_json);
         },
 
         set_on_card(type = '', word = {}){
@@ -819,18 +810,28 @@ const app = Vue.createApp({
                 (Przytrzymanie <b>SHIFT podczas nasickania przycisków</b> wyklucza wszystkie słowa, pomiędzy klikniętym teraz i poprzednio)
             </p>
 
-            <button class="io_word"
-                @click="save_words()">
-                Zapisz lokalne zmiany listy słów
-            </button>
-            <button class="io_word"
-                @click="export_words()">
-                Eksportuj listę słów
-            </button>
-            <button class="io_word"
-                @click="import_words()">
-                Importuj listę słów
-            </button>
+            <div class="io_words">
+                <button class="io_word"
+                    @click="save_words()">
+                    Zapisz lokalne zmiany listy słów
+                </button>
+                <button class="io_word"
+                    @click="unsave_words()">
+                    Usuń lokalne zmiany słów
+                </button>
+                <button class="io_word"
+                    @click="restore_words()">
+                    Przywróć oryginalną listę słów
+                </button>
+                <button class="io_word"
+                    @click="export_words()">
+                    Eksportuj listę słów
+                </button>
+                <button class="io_word"
+                    @click="import_words()">
+                    Importuj listę słów
+                </button>
+            </div>
             <RadioList 
                 v-model:option="current_list_word_type"
                 :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb'], ['Przymiotniki','adj'], ['Inne', 'other']]"
@@ -850,20 +851,6 @@ const app = Vue.createApp({
                     @exclude-request="([to_exclude, range]) => word_set_exclude(current_list_word_type, index, to_exclude, range)"
                 />
             </div>
-
-            <!-- <p>
-                {{check_diff_json ? "GIT" : "NIE GIT"}}
-            </p>
-
-            <p>
-                {{words_diff_json}}
-            </p>
-            <p>
-                {{words_merged_json}}
-            </p>
-            <p>
-                {{out_words_json}}
-            </p> -->
 
         </div>
         

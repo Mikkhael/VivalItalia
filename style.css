@@ -263,6 +263,16 @@ input[type="text"]:focus{
     padding: 20px;
 }
 
+.io_word{
+    flex-grow: 1;
+    padding: 10px;
+}
+.io_words{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 #wait_for_words_div{
     text-align: center;
     /* padding: 20px; */
