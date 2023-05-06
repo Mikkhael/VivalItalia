@@ -65,7 +65,7 @@ function get_from_local_storage(key, def = "{}"){
 
 const EMPTY_JSON = `{}`;
 const custom_words_json_url  = SEARCH_PARAMS.get("words_url");
-const default_words_json_url = "/test_words.json";
+const default_words_json_url = "words.json";
 function fetch_words_json(url = default_words_json_url, signal){
     //return new Promise.resolve(TEST_WORD_JSON);
     console.log("SIGNAL", signal);
@@ -299,8 +299,8 @@ const app = Vue.createApp({
                 do_verbs: true,
                 do_adjs:  true,
                 do_other: true,
-                nouns_plural_level: 3, // 0-none, 1-irregular, 2-random, 3-all
-                verbs_con_level: 3,
+                nouns_plural_level: 2, // 0-none, 1-irregular, 2-random, 3-all
+                verbs_con_level: 2,
 
                 accent_key: "`",
             },

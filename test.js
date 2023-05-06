@@ -238,7 +238,7 @@ function convert_words_to_questions(words, options, excluded_set){
     let res = [];
     for(let w of words){
 		if(excluded_set.has(w.ita)) continue;
-		console.log(w, w.to_all_questions);
+		// console.log(w, w.to_all_questions);
         res.push(...w.to_all_questions(options));
     }
     return res;
