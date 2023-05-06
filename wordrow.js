@@ -7,7 +7,7 @@ const WordRow = {
             return this.word.pol.join(',');
         },
 		incomplete(){
-			console.log("WORDROW", this.type, this.word);
+			// console.log("WORDROW", this.type, this.word);
 			return !this.word.is_complete();
 		}
     },

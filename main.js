@@ -66,15 +66,51 @@ function get_from_local_storage(key, def = "{}"){
 const EMPTY_JSON = `{}`;
 const custom_words_json_url  = SEARCH_PARAMS.get("words_url");
 const default_words_json_url = "/test_words.json";
-function fetch_words_json(url = default_words_json_url){
+function fetch_words_json(url = default_words_json_url, signal){
     //return new Promise.resolve(TEST_WORD_JSON);
-    return fetch(url);
+    console.log("SIGNAL", signal);
+    return fetch(url, {signal});
 }
 function get_loacal_words_json(){
     return get_from_local_storage("words_json", "{}");
 }
 function save_loacl_words_json(json){
     return put_to_local_storage("words_json", json);
+}
+function save_local_words_diff(original, words, warn = false){
+    if(warn)
+        window.alert("Zapisane zostaną jedynie różice mędzy oryginalną listą słów, a zmodyfikowaną. Jeśli chcesz zachować pełną listę słów, w przypadku np. awarii internetu, skorzystaj z 'Eksportu Słów'");
+    const diff = diff_words(original, words);
+    const merged = merge_words(original, diff);
+    const diff_json = JSON.stringify(diff);
+    const words_json = JSON.stringify(words);
+    const merged_json = JSON.stringify(merged);
+    const words_sorted = words_json.split('').sort().join('');
+    const merged_sorted = merged_json.split('').sort().join('');
+    const sanity_check = merged_sorted === words_sorted;
+    if(!sanity_check){
+        console.log("BŁĄD Z DIFF'EM !!!!!", original, words, diff, merged);
+    }else{
+        console.log("DIFF jest GIT!");
+    }
+    return put_to_local_storage("words_diff", JSON.stringify({
+        checked: sanity_check,
+        diff: diff
+    }));
+}
+function load_local_words_diff(original){
+    const diff_json = get_from_local_storage("words_diff");
+    if(!diff_json){
+        return false;
+    }
+    const {checked, diff} = JSON.parse(diff_json);
+    if(checked){
+        console.log("LOAD LOCAL WORDS DIFF git");
+    }else{
+        console.log("LOAD LOCAL WORDS DIFF !!! NIE GIT !!!");
+    }
+    const merged = merge_words(original, diff);
+    return merged;
 }
 function encode_json(json){
     return "data:text/json;charset=utf-8," + encodeURIComponent(json);
@@ -211,14 +247,24 @@ const app = Vue.createApp({
 
         this.test_pool_unpassed = [];
         this.test_unpassed = [];
+        this.abort_controller = new AbortController();
+        this.abort_controller_signal = this.abort_controller.signal;
     },
     mounted(){
-        fetch_words_json(custom_words_json_url || default_words_json_url).then(res => {
+        fetch_words_json(custom_words_json_url || default_words_json_url,
+                        this.abort_controller_signal)
+        .then((res) => {
             return res.text();
         }).then(json => {
-            this.update_words_json(json);
+            this.update_words_json(json, true);
+            this.words_fetched = true;
         }).catch(err => {
             console.log("FETCHING ERROR: ", err);
+            if(err.name !== "AbortError"){
+                this.words_fetching_error = err;
+                return;
+            }
+            this.words_fetched = true;
         });
 
         load_options_cache(this.options);
@@ -261,6 +307,14 @@ const app = Vue.createApp({
             test_answer: "",
             test_log: "",
             
+            words_original: {
+                noun: [],
+                verb: [],
+                adj:  [],
+                other:[],
+            },
+            words_fetched: false,
+            words_fetching_error: null,
             words: {
                 noun: [],
                 verb: [],
@@ -291,8 +345,37 @@ const app = Vue.createApp({
     },
     computed:{
         out_words_json(){
+            // return generate_words_json({noun: this.words['noun']});
             return generate_words_json(this.words);
         },
+        // words_diff(){
+        //     // const no = this.words_original['noun'];
+        //     // const n2 = this.words['noun'];
+        //     // const diff = diff_words({noun: no}, {noun: n2});
+        //     const diff = diff_words(this.words_original, this.words);
+        //     window.D = diff;
+        //     return diff;
+        // },
+        // words_diff_json(){
+        //     return JSON.stringify(this.words_diff);
+
+        // },
+        // words_merged(){
+        //     // const no = this.words_original['noun'];
+        //     // const d = this.words_diff['noun'];
+        //     // const merged = merge_words({noun: no}, {noun: d});
+        //     const merged = merge_words(this.words_original, this.words_diff);
+        //     window.M = merged;
+        //     return merged;
+        // },
+        // words_merged_json(){
+        //     return JSON.stringify(this.words_merged);
+        // },
+        // check_diff_json(){
+        //     const res = this.words_merged_json.split('').sort().join('') === this.out_words_json.split('').sort().join('');
+        //     console.log("GIT: ", res);
+        //     return res;
+        // },
         current_list_word_type_pol(){
             switch (this.current_list_word_type){
                 case 'noun':  return 'Rzeczownik';
@@ -306,7 +389,8 @@ const app = Vue.createApp({
     methods: {
         
         save_words(){
-            const res = save_loacl_words_json(this.out_words_json);
+            // const res = save_loacl_words_json(this.out_words_json);
+            const res = save_local_words_diff(this.words_original, this.words, true);
             if(!res){console.log("Failed saving words");}
             return res;
         },
@@ -322,7 +406,14 @@ const app = Vue.createApp({
             }
         },
 
-        update_words_json(words_json){
+        abort_words_fetch(){
+            this.abort_controller.abort();
+        },
+
+        update_words_json(words_json, change_original = false){
+            if(change_original){
+                this.words_original = parse_words_json(words_json);
+            }
             this.words = parse_words_json(words_json);
         },
 
@@ -376,7 +467,7 @@ const app = Vue.createApp({
             //     console.log(this.$refs.word_card_elem);
             //     this.$refs.word_card_elem.focus_on_word();
             // });
-            this.save_words(); // TODO
+            // this.save_words(); // TODO
         },
         word_set_exclude(type, index, to_excluded, range, remember_index = true){
             // console.log("EXCLUDE", type, index, to_excluded, range, remember_index, this.last_excluded_index);
@@ -432,7 +523,7 @@ const app = Vue.createApp({
                 this.$refs.answer_elem.focus();
             });
 
-            save_test_cache(this.export_test_state());
+            // save_test_cache(this.export_test_state());
         },
 
         pass_question(correct){
@@ -471,6 +562,10 @@ const app = Vue.createApp({
             }
             console.log("REGENERATED", this.test_pool_unpassed, this.test_unpassed);
             return this.test_pool_unpassed.length === 0;
+        },
+
+        save_test(){
+            return save_test_cache(this.export_test_state());
         },
 
         stop_test(){
@@ -648,45 +743,7 @@ const app = Vue.createApp({
             </fieldset>
         </div>
 
-        <div id="nav_words" v-if="nav === 'words'">
 
-            <p>
-                Poniżej znajduje się lista słów z każdej kategori, które losowane będą do pytać.
-                Słowa można przyciskami <b>Test-</b> oraz <b>Test+</b> wykluczać lub z powrotem wkluczać do puli testowej.
-                <br>
-                (Przytrzymanie <b>SHIFT podczas nasickania przycisków</b> wyklucza wszystkie słowa, pomiędzy klikniętym teraz i poprzednio)
-            </p>
-
-            <button class="io_word"
-                @click="export_words()">
-                Eksportuj listę słów
-            </button>
-            <button class="io_word"
-                @click="import_words()">
-                Importuj listę słów
-            </button>
-            <RadioList 
-                v-model:option="current_list_word_type"
-                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb'], ['Przymiotniki','adj'], ['Inne', 'other']]"
-            />
-
-            <button class="add_word"
-                @click="add_word(current_list_word_type)">
-                + Nowy {{ current_list_word_type_pol }}
-            </button>
-            <div class="word_rows">
-                <WordRow v-for="(word, index) in words[current_list_word_type]"
-                    :type="current_list_word_type"
-                    :word="word"
-                    :excluded="words_excluded[current_list_word_type].has(word.ita)"
-                    @edit-request="set_on_card(current_list_word_type, word)"
-                    @delete-request="delete_word(current_list_word_type, index)"
-                    @exclude-request="([to_exclude, range]) => word_set_exclude(current_list_word_type, index, to_exclude, range)"
-                />
-            </div>
-
-        </div>
-        
         <div id="nav_test" class="test_container" v-if="nav === 'test'">
 
             <template v-if="test_started">
@@ -717,14 +774,21 @@ const app = Vue.createApp({
                     <span v-html="test_question_ref.expected"></span>
                 </div>
 
-                <button class="stop_test"
-                        @click="stop_test()">
-                    Zakończ Test
-                </button>
+
+                <div>
+                    <button class="test_btn"
+                            @click="save_test()">
+                        Zapisz postęp testu
+                    </button>
+                    <button class="test_btn"
+                            @click="stop_test()">
+                        Zakończ Test
+                    </button>
+                </div>
 
             </template>
             <template v-else>
-                <button class="new_test_btn"
+                <button class="new_test_btn" v-if="words_fetched"
                         @click="start_test()">
                     Rozpoczij Test
                 </button>
@@ -732,6 +796,75 @@ const app = Vue.createApp({
 
 
         </div>
+
+        <div id="wait_for_words_div">
+            <div v-if="!words_fetched">  
+                <div class="loader"></div>
+                <p>Ładowanie listy słów...</p>
+                <p><button @click="abort_words_fetch">Anuluj wczytywanie słów</button></p>
+            </div>
+            <div v-if="words_fetching_error !== null" class="words_fetching_error">
+                <p>Wystąpił błąd podczas wczytywania słów</p>
+            </div>
+        </div>
+
+        <div id="nav_words" v-if="nav === 'words' && words_fetched">
+
+            <p>
+                Poniżej znajduje się lista słów z każdej kategori, które losowane będą do pytać.
+                Słowa można przyciskami <b>Test-</b> oraz <b>Test+</b> wykluczać lub z powrotem wkluczać do puli testowej.
+                <br>
+                (Przytrzymanie <b>SHIFT podczas nasickania przycisków</b> wyklucza wszystkie słowa, pomiędzy klikniętym teraz i poprzednio)
+            </p>
+
+            <button class="io_word"
+                @click="save_words()">
+                Zapisz lokalne zmiany listy słów
+            </button>
+            <button class="io_word"
+                @click="export_words()">
+                Eksportuj listę słów
+            </button>
+            <button class="io_word"
+                @click="import_words()">
+                Importuj listę słów
+            </button>
+            <RadioList 
+                v-model:option="current_list_word_type"
+                :option_values="[['Rzeczowniki', 'noun'], ['Czasowniki', 'verb'], ['Przymiotniki','adj'], ['Inne', 'other']]"
+            />
+
+            <button class="add_word"
+                @click="add_word(current_list_word_type)">
+                + Nowy {{ current_list_word_type_pol }}
+            </button>
+            <div class="word_rows">
+                <WordRow v-for="(word, index) in words[current_list_word_type]"
+                    :type="current_list_word_type"
+                    :word="word"
+                    :excluded="words_excluded[current_list_word_type].has(word.ita)"
+                    @edit-request="set_on_card(current_list_word_type, word)"
+                    @delete-request="delete_word(current_list_word_type, index)"
+                    @exclude-request="([to_exclude, range]) => word_set_exclude(current_list_word_type, index, to_exclude, range)"
+                />
+            </div>
+
+            <!-- <p>
+                {{check_diff_json ? "GIT" : "NIE GIT"}}
+            </p>
+
+            <p>
+                {{words_diff_json}}
+            </p>
+            <p>
+                {{words_merged_json}}
+            </p>
+            <p>
+                {{out_words_json}}
+            </p> -->
+
+        </div>
+        
 
     </main>
 
