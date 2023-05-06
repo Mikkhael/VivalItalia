@@ -664,7 +664,7 @@ const app = Vue.createApp({
                     <input v-model="options.accent_key" />
                     <br>
                     Można wstawiać włoskie akcenty nad samogłoskami jak [è] i [à], 
-                    <b>bez potrzeby posiadania włsokiej klawiatury</b>. 
+                    <b>bez potrzeby posiadania włoskiej klawiatury</b>. 
                     Można napisać literę bez akcentu, 
                     a następnie nacisnąć odpowiedni klawisz.
                     Aby wyknać akcent w prawą stronę, należy nacisnąć go dwukrotnie.
@@ -783,7 +783,7 @@ const app = Vue.createApp({
             <template v-else>
                 <button class="new_test_btn" v-if="words_fetched"
                         @click="start_test()">
-                    Rozpoczij Test
+                    Rozpocznij Test
                 </button>
             </template>
 
