@@ -126,13 +126,15 @@ function generate_regular_plural(ita){
 	const pre_last = ita.length >= 2 ? ita[ita.length - 2] : "";
 	const word_core = ita.slice(0,-1);
 	if(last_char === 'o'){
-		if(pre_last === "c"){
+		if(pre_last === "c" || pre_last === "g"){
 			return word_core + "hi";
+		}else if(pre_last === 'i'){
+			return word_core;
 		}else{
 			return word_core + "i";
 		}
 	}else if(last_char === 'a'){
-		if(pre_last === "c"){
+		if(pre_last === "c" || pre_last === "g"){
 			return word_core + "he";
 		}else{
 			return word_core + "e";
