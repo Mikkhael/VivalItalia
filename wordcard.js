@@ -13,21 +13,23 @@ const WordCard = {
     ],
     data(){
         return{
-            word: this.sourceWord.clone()
+            word: this.sourceWord.clone(),
+            pol_string: this.sourceWord.pol?.join(',') || "",
+            pol_plural_string: this.sourceWord.pol_plural?.join(',') || "",
         };
     },
+    watch:{
+        pol_string(newValue) {
+            this.word.pol = sanitize_word_arr(newValue.split(','));
+        },
+        pol_plural_string(newValue) {
+            this.word.pol_plural = sanitize_word_arr(newValue.split(','));
+        },
+    },
     computed:{
-        pol_string:{
-            get(){ return this.word.pol.join(','); },
-            set(value){ this.word.pol = sanitize_word_arr(value.split(',')); },
-        },
-        pol_plural_string:{
-            get(){ return this.word.pol_plural.join(','); },
-            set(value){ this.word.pol_plural = sanitize_word_arr(value.split(','));},
-        },
 		incomplete(){
 			return !this.word.is_complete();
-		}
+		},
     },
     methods:{
 		force_update(){

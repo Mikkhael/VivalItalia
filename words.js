@@ -494,7 +494,7 @@ class WordVerb{
 			this.forms.normal[5] || base + p5,
 		];
 
-        return this.forms.normal;
+        // return this.forms.normal;
     }
 }
 
