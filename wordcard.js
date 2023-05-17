@@ -89,7 +89,7 @@ const WordCard = {
                 </div>
                 <div>
                     <span>Konigacja</span>
-                    <RadioList v-model:option="word.con" :option_values="[['Auto',''],['Inne','-'],['-are','are']]" :soft_option="word.true_con()" />
+                    <RadioList v-model:option="word.con" :option_values="[['Auto',''],['Inne','-'],['-are','are'],['-ere','ere'],['-ire','ire']]" :soft_option="word.true_con()" />
                 </div>
             </template>
         </div>

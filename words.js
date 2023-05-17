@@ -459,8 +459,17 @@ class WordVerb{
         if(this.con){
             return this.con;
         }
+		if(this.forms.normal.filter(x => x !== "").length !== 0){
+			return "-";
+		}
         if(this.ita.slice(-3) === "are"){
             return "are";
+        }
+        if(this.ita.slice(-3) === "ere"){
+            return "ere";
+        }
+        if(this.ita.slice(-3) === "ire"){
+            return "ire";
         }
         return "-";
     }
@@ -468,21 +477,22 @@ class WordVerb{
     true_form_normal(){
         const con = this.true_con();
 
-        if(con === "are"){
-            const base = this.ita.slice(0, -3);
-            const ends_with_i = base.length > 0 && (base[base.length - 1] === 'i');
-            const opt_i = ends_with_i ? "" : "i";
+		const base = this.ita.slice(0, -3);
+		const ends_with_i = base.length > 0 && (base[base.length - 1] === 'i');
+		const opt_i = ends_with_i ? "" : "i";
 
-            return [
-                this.forms.normal[0] || base + 'o',
-                this.forms.normal[1] || base + opt_i,
-                this.forms.normal[2] || base + 'a',
-                this.forms.normal[3] || base + opt_i + 'amo',
-                this.forms.normal[4] || base + 'ate',
-                this.forms.normal[5] || base + 'ano',
-            ];
-        }
+		const p2 = (con == 'are') ? 'a' : "e"; 
+		const p4 = con[0] + "te";
+		const p5 = (con == 'are') ? 'ano' : "ono"; 
 
+		return [
+			this.forms.normal[0] || base + 'o',
+			this.forms.normal[1] || base + opt_i,
+			this.forms.normal[2] || base + p2,
+			this.forms.normal[3] || base + opt_i + 'amo',
+			this.forms.normal[4] || base + p4,
+			this.forms.normal[5] || base + p5,
+		];
 
         return this.forms.normal;
     }
