@@ -19,6 +19,10 @@ const WordCard = {
         };
     },
     watch:{
+        word(newValue){
+            this.pol_string = newValue.pol?.join(',') || "";
+            this.pol_plural_string = newValue.pol_plural?.join(',') || "";
+        },
         pol_string(newValue) {
             this.word.pol = sanitize_word_arr(newValue.split(','));
         },
