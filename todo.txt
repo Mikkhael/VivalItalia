@@ -1,3 +1,1 @@
-add cnjugation -ire B
 add m/f gender
-add ire verbs and weekdays

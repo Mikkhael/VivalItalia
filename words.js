@@ -479,19 +479,23 @@ class WordVerb{
 
 		const base = this.ita.slice(0, -3);
 		const ends_with_i = base.length > 0 && (base[base.length - 1] === 'i');
+		const ends_with_g = base.length > 0 && (base[base.length - 1] === 'g');
+		const ends_with_c = base.length > 0 && (base[base.length - 1] === 'c');
 		const opt_i = ends_with_i ? "" : "i";
 
 		const p2 = (con == 'are') ? 'a' : "e"; 
 		const p4 = con[0] + "te";
-		const p5 = (con == 'are') ? 'ano' : "ono"; 
+		const p5 = (con == 'are') ? 'ano' : "ono";
+		const add_h = (con == 'are' && (ends_with_g || ends_with_c)) ? "h" : "";
+		const add_isc = (con == 'ireB') ? "isc" : "";
 
 		return [
-			this.forms.normal[0] || base + 'o',
-			this.forms.normal[1] || base + opt_i,
-			this.forms.normal[2] || base + p2,
-			this.forms.normal[3] || base + opt_i + 'amo',
+			this.forms.normal[0] || base + add_isc + 'o',
+			this.forms.normal[1] || base + add_isc + add_h + opt_i,
+			this.forms.normal[2] || base + add_isc + p2,
+			this.forms.normal[3] || base + add_h + opt_i + 'amo',
 			this.forms.normal[4] || base + p4,
-			this.forms.normal[5] || base + p5,
+			this.forms.normal[5] || base + add_isc + p5,
 		];
 
         // return this.forms.normal;
