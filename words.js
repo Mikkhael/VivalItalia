@@ -1,1 +1,532 @@
-{"noun":[{"ita":"Inghilterra","pol":["Anglia"],"pol_plural":["Anglie"],"case":"","plural":""},{"ita":"aereo","pol":["samolot"],"pol_plural":["samoloty"],"case":"","plural":""},{"ita":"albergo","pol":["hotel"],"pol_plural":["hotele"],"case":"","plural":""},{"ita":"albero","pol":["drzewo"],"pol_plural":["drzewa"],"case":"","plural":""},{"ita":"amica","pol":["przyjaciółka"],"pol_plural":["przyjaciułki"],"case":"","plural":""},{"ita":"amico","pol":["przyjaciel"],"pol_plural":["przyjaciele"],"case":"","plural":"amici"},{"ita":"anello","pol":["pierścionek"],"pol_plural":["pierścionki"],"case":"","plural":""},{"ita":"appassionato","pol":["miłośnik"],"pol_plural":["miłośnicy"],"case":"","plural":""},{"ita":"appunto","pol":["notatka"],"pol_plural":["notatki"],"case":"","plural":""},{"ita":"aranciata","pol":["oranżada"],"pol_plural":["oranżady"],"case":"","plural":""},{"ita":"armadio","pol":["szafa"],"pol_plural":["szafy"],"case":"","plural":""},{"ita":"artiste","pol":["artysta","artystka"],"pol_plural":["artyści","artystki"],"case":"","plural":"artistes"},{"ita":"autunno","pol":["jesień"],"pol_plural":["jesienie"],"case":"","plural":""},{"ita":"bacio","pol":["pocałunek"],"pol_plural":["pocałunki"],"case":"","plural":""},{"ita":"bambino","pol":["dziecko"],"pol_plural":["dzieci"],"case":"","plural":""},{"ita":"banca","pol":["bank"],"pol_plural":["banki"],"case":"","plural":""},{"ita":"barba","pol":["broda"],"pol_plural":["brody"],"case":"","plural":""},{"ita":"bicchiere","pol":["szklanka"],"pol_plural":["szklanki"],"case":"m","plural":""},{"ita":"biglietto","pol":["bilet"],"pol_plural":["bilety"],"case":"","plural":""},{"ita":"bisogno","pol":["potrzeba"],"pol_plural":["potrzeby"],"case":"","plural":""},{"ita":"borsa","pol":["torba"],"pol_plural":["torby"],"case":"","plural":""},{"ita":"bottiglia","pol":["butelka"],"pol_plural":["butelki"],"case":"","plural":""},{"ita":"braccialetto","pol":["branzoletka"],"pol_plural":["branzoletki"],"case":"","plural":""},{"ita":"caffé","pol":["kawa","kawiarnia"],"pol_plural":["kawy","kawiarnie"],"case":"m","plural":""},{"ita":"calcio","pol":["kopniak","piłka nożna"],"pol_plural":["kopniaki","piłki nożne"],"case":"","plural":""},{"ita":"caldo","pol":["gorąco"],"pol_plural":["gorąca"],"case":"","plural":""},{"ita":"cameriere","pol":["kelner"],"pol_plural":["kelnerzy"],"case":"m","plural":""},{"ita":"cane","pol":["pies"],"pol_plural":["psy"],"case":"m","plural":""},{"ita":"cantante","pol":["śpiewak","śpiewaczka"],"pol_plural":["śpiewacy","śpiewaczki"],"case":"","plural":""},{"ita":"canzone","pol":["piosenka"],"pol_plural":["piosenki"],"case":"f","plural":""},{"ita":"capello","pol":["włos"],"pol_plural":["włosy"],"case":"","plural":""},{"ita":"caramella","pol":["cukierek"],"pol_plural":["cukierki"],"case":"","plural":""},{"ita":"carattere","pol":["charakter"],"pol_plural":["charaktery"],"case":"m","plural":""},{"ita":"caratteristica","pol":["cecha"],"pol_plural":["cechy"],"case":"","plural":""},{"ita":"carnagione","pol":["karnacja"],"pol_plural":["karnacje"],"case":"f","plural":""},{"ita":"casa","pol":["dom"],"pol_plural":["domy"],"case":"","plural":""},{"ita":"cena","pol":["kolacja"],"pol_plural":["kolacje"],"case":"","plural":""},{"ita":"centro","pol":["centrum"],"pol_plural":["centra"],"case":"","plural":""},{"ita":"chiave","pol":["klucz"],"pol_plural":["klucze"],"case":"f","plural":""},{"ita":"cibo","pol":["jedzenie"],"pol_plural":["jedzenia"],"case":"","plural":""},{"ita":"città","pol":["miasto"],"pol_plural":["miasta"],"case":"f","plural":""},{"ita":"classe","pol":["klasa"],"pol_plural":["klasy"],"case":"f","plural":""},{"ita":"colazione","pol":["śniadanie"],"pol_plural":["śniadania"],"case":"f","plural":""},{"ita":"collana","pol":["naszyjnik"],"pol_plural":["naszyjniki"],"case":"","plural":""},{"ita":"collega","pol":["kolega","koleżanka"],"pol_plural":["koledzy","koleżanki"],"case":"","plural":"colleghi"},{"ita":"compleanno","pol":["urodziny"],"pol_plural":["urodziny","(l.mnoga)"],"case":"","plural":""},{"ita":"cono","pol":["rożek"],"pol_plural":["rożki"],"case":"","plural":""},{"ita":"coppetta","pol":["pucharek","kubeczek"],"pol_plural":["pucharki","kubeczki"],"case":"","plural":""},{"ita":"cornetto","pol":["rogalik"],"pol_plural":["rogaliki"],"case":"","plural":""},{"ita":"corso","pol":["kurs"],"pol_plural":["kursy"],"case":"","plural":""},{"ita":"cosa","pol":["rzecz"],"pol_plural":["rzeczy"],"case":"","plural":""},{"ita":"cucina","pol":["kuchnia"],"pol_plural":["kuchnie"],"case":"","plural":""},{"ita":"doccia","pol":["prysznic"],"pol_plural":["prysznice"],"case":"","plural":""},{"ita":"domenica","pol":["niedziela"],"pol_plural":["niedziele"],"case":"","plural":""},{"ita":"esame","pol":["test","egzamin"],"pol_plural":["testy","egzaminy"],"case":"m","plural":""},{"ita":"estate","pol":["lato"],"pol_plural":["lata"],"case":"f","plural":""},{"ita":"età","pol":["wiek","epoka"],"pol_plural":["wieki","epoki"],"case":"f","plural":""},{"ita":"fame","pol":["głód"],"pol_plural":["głody"],"case":"f","plural":""},{"ita":"farmacia","pol":["apteka"],"pol_plural":["apteki"],"case":"","plural":""},{"ita":"festa","pol":["impreza"],"pol_plural":["imprezy"],"case":"","plural":""},{"ita":"figlia","pol":["córka"],"pol_plural":["córki"],"case":"","plural":""},{"ita":"figlio","pol":["syn"],"pol_plural":["synowie"],"case":"","plural":""},{"ita":"fine","pol":["koniec"],"pol_plural":["końce"],"case":"","plural":""},{"ita":"finestra","pol":["okno"],"pol_plural":["okna"],"case":"","plural":""},{"ita":"fiume","pol":["rzeka"],"pol_plural":["rzeki"],"case":"m","plural":""},{"ita":"foglio","pol":["arkusz"],"pol_plural":["arkusze"],"case":"","plural":""},{"ita":"fragola","pol":["truskawka"],"pol_plural":["truskawki"],"case":"","plural":""},{"ita":"fratello","pol":["brat"],"pol_plural":["bracia"],"case":"","plural":""},{"ita":"freddo","pol":["zimno"],"pol_plural":["zimna"],"case":"","plural":""},{"ita":"frutta","pol":["owoc"],"pol_plural":["owoce"],"case":"","plural":""},{"ita":"gatto","pol":["kot","kocur"],"pol_plural":["koty","kocury"],"case":"","plural":""},{"ita":"gelato","pol":["lód"],"pol_plural":["lody"],"case":"","plural":""},{"ita":"genitore","pol":["rodzic"],"pol_plural":["rodzice"],"case":"m","plural":""},{"ita":"giocatore","pol":["gracz"],"pol_plural":["gracze"],"case":"m","plural":""},{"ita":"gioco","pol":["gra"],"pol_plural":["gry"],"case":"","plural":""},{"ita":"gioevdì","pol":["czwartek"],"pol_plural":["czwartki"],"case":"m","plural":""},{"ita":"giorno","pol":["dzień"],"pol_plural":["dni"],"case":"","plural":""},{"ita":"gusto","pol":["smak"],"pol_plural":["smaki"],"case":"","plural":""},{"ita":"impiegato","pol":["urzędnik","pracownik"],"pol_plural":["urzędnicy","pracownicy"],"case":"","plural":""},{"ita":"insegnante","pol":["nauczyciel"],"pol_plural":["nauczyciele"],"case":"m","plural":""},{"ita":"inverno","pol":["zima"],"pol_plural":["zimy"],"case":"","plural":""},{"ita":"lampada","pol":["lampa"],"pol_plural":["lampy"],"case":"","plural":""},{"ita":"lavagna","pol":["tablica"],"pol_plural":["tablice"],"case":"","plural":""},{"ita":"letto","pol":["łóżko"],"pol_plural":["łóżka"],"case":"","plural":""},{"ita":"lezione","pol":["lekcja"],"pol_plural":["lekcje"],"case":"f","plural":""},{"ita":"libreria","pol":["biblioteka"],"pol_plural":["biblioteki"],"case":"","plural":""},{"ita":"libro","pol":["książka"],"pol_plural":["książki"],"case":"","plural":""},{"ita":"lingua","pol":["język"],"pol_plural":["języki"],"case":"","plural":""},{"ita":"luce","pol":["światło"],"pol_plural":["światła"],"case":"f","plural":""},{"ita":"lunedì","pol":["poniedziałek"],"pol_plural":["poniedziałki"],"case":"m","plural":""},{"ita":"macchina","pol":["samochód"],"pol_plural":["samochody"],"case":"","plural":""},{"ita":"madre","pol":["matka"],"pol_plural":["matki"],"case":"f","plural":""},{"ita":"mamma","pol":["mama"],"pol_plural":["mamy"],"case":"","plural":""},{"ita":"mare","pol":["morze"],"pol_plural":["morza"],"case":"m","plural":""},{"ita":"margherita","pol":["stokrotka"],"pol_plural":["stokrotki"],"case":"","plural":""},{"ita":"martedì","pol":["wtorek"],"pol_plural":["wtorki"],"case":"m","plural":""},{"ita":"matita","pol":["ołówek"],"pol_plural":["ołówki"],"case":"","plural":""},{"ita":"mattina","pol":["poranek"],"pol_plural":["poranki"],"case":"","plural":""},{"ita":"mercato","pol":["rynek"],"pol_plural":["rynki"],"case":"","plural":""},{"ita":"mercoledì","pol":["środa"],"pol_plural":["środy"],"case":"m","plural":""},{"ita":"mese","pol":["miesiąc"],"pol_plural":["miesiące"],"case":"m","plural":""},{"ita":"mondo","pol":["świat"],"pol_plural":["światy"],"case":"","plural":""},{"ita":"montagna","pol":["góra"],"pol_plural":["góry"],"case":"","plural":""},{"ita":"mostra","pol":["wystawa"],"pol_plural":["wystawy"],"case":"","plural":""},{"ita":"nonno","pol":["dziadek"],"pol_plural":["dziadkowie"],"case":"","plural":""},{"ita":"notte","pol":["noc"],"pol_plural":["noce"],"case":"f","plural":""},{"ita":"occhio","pol":["oko"],"pol_plural":["oczy"],"case":"","plural":""},{"ita":"ombrello","pol":["parasol"],"pol_plural":["parasole"],"case":"","plural":""},{"ita":"opera","pol":["utwór"],"pol_plural":["utwory"],"case":"","plural":""},{"ita":"ora","pol":["godzina"],"pol_plural":["godziny"],"case":"","plural":""},{"ita":"orologio","pol":["zegarek"],"pol_plural":["zegarki"],"case":"","plural":""},{"ita":"padre","pol":["ojciec"],"pol_plural":["ojcowie"],"case":"m","plural":""},{"ita":"pagina","pol":["strona"],"pol_plural":["strony"],"case":"","plural":""},{"ita":"pallone","pol":["piłka"],"pol_plural":["piłki"],"case":"m","plural":""},{"ita":"panino","pol":["kanapka"],"pol_plural":["kanapki"],"case":"","plural":""},{"ita":"papà","pol":["tata"],"pol_plural":["tatowie"],"case":"m","plural":""},{"ita":"partita","pol":["mecz"],"pol_plural":["mecze"],"case":"","plural":""},{"ita":"passaporto","pol":["paszport"],"pol_plural":["paszporty"],"case":"","plural":""},{"ita":"pasta","pol":["makaron"],"pol_plural":["makarony"],"case":"","plural":""},{"ita":"pasticceria","pol":["cukiernia"],"pol_plural":["cukiernie"],"case":"","plural":""},{"ita":"paura","pol":["strach"],"pol_plural":["strachy"],"case":"","plural":""},{"ita":"pelle","pol":["skóra"],"pol_plural":["skóry"],"case":"f","plural":""},{"ita":"penna","pol":["pióro"],"pol_plural":["pióra"],"case":"","plural":""},{"ita":"periodo","pol":["okres"],"pol_plural":["okresy"],"case":"","plural":""},{"ita":"persona","pol":["osoba"],"pol_plural":["osoby"],"case":"","plural":""},{"ita":"pesce","pol":["ryba"],"pol_plural":["ryby"],"case":"m","plural":""},{"ita":"piatto","pol":["talerz","danie"],"pol_plural":["talerze","dania"],"case":"","plural":""},{"ita":"piazza","pol":["plac"],"pol_plural":["place"],"case":"","plural":""},{"ita":"piede","pol":["stopa"],"pol_plural":["stopy","(pieszo)"],"case":"m","plural":""},{"ita":"piscina","pol":["basen"],"pol_plural":["baseny"],"case":"","plural":""},{"ita":"pomeriggio","pol":["popołudnie"],"pol_plural":["popołudnia"],"case":"","plural":""},{"ita":"porta","pol":["drzwi"],"pol_plural":["drzwi","(l.mnoga)"],"case":"","plural":""},{"ita":"primavera","pol":["wiosna"],"pol_plural":["wisony"],"case":"","plural":""},{"ita":"quaderno","pol":["zeszyt"],"pol_plural":["zeszyty"],"case":"","plural":""},{"ita":"ragazza","pol":["dziewczyna"],"pol_plural":["dziewczyny"],"case":"","plural":""},{"ita":"ragazzo","pol":["chłopiec","chłopak"],"pol_plural":["chłopcy","chłopacy"],"case":"","plural":""},{"ita":"ragione","pol":["racja"],"pol_plural":["racje"],"case":"f","plural":""},{"ita":"regalo","pol":["prezent"],"pol_plural":["prezenty"],"case":"","plural":""},{"ita":"riposo","pol":["odpoczynek"],"pol_plural":["odpoczynki"],"case":"","plural":""},{"ita":"romanzo","pol":["powieść"],"pol_plural":["powieści"],"case":"","plural":""},{"ita":"sabato","pol":["sobota"],"pol_plural":["soboty"],"case":"","plural":""},{"ita":"scaffale","pol":["półka","regał"],"pol_plural":["półki","regały"],"case":"m","plural":""},{"ita":"scarpa","pol":["but"],"pol_plural":["buty"],"case":"","plural":""},{"ita":"scrittore","pol":["pisarz"],"pol_plural":["pisarze"],"case":"m","plural":""},{"ita":"scrivania","pol":["biurko"],"pol_plural":["biurka"],"case":"","plural":""},{"ita":"scuola","pol":["szkoła"],"pol_plural":["szkoły"],"case":"","plural":""},{"ita":"sedia","pol":["krzesło"],"pol_plural":["krzesła"],"case":"","plural":""},{"ita":"segretario","pol":["sekretarz"],"pol_plural":["sekretarze"],"case":"","plural":""},{"ita":"sera","pol":["wieczór"],"pol_plural":["wieczory"],"case":"","plural":""},{"ita":"serpente","pol":["wąż"],"pol_plural":["węże"],"case":"m","plural":""},{"ita":"sete","pol":["spragnienie"],"pol_plural":["spragnienia"],"case":"f","plural":""},{"ita":"settimana","pol":["tydzień"],"pol_plural":["tygodnie"],"case":"","plural":""},{"ita":"sigaretta","pol":["papieros"],"pol_plural":["papierosy"],"case":"","plural":""},{"ita":"sole","pol":["słońce"],"pol_plural":["słońca"],"case":"m","plural":""},{"ita":"sonno","pol":["sen"],"pol_plural":["sny"],"case":"","plural":""},{"ita":"sorella","pol":["siostra"],"pol_plural":["siostry"],"case":"","plural":""},{"ita":"spesa","pol":["zakupy"],"pol_plural":["zakupy","(l.mnoga)"],"case":"","plural":""},{"ita":"squadra","pol":["drużyna"],"pol_plural":["drużyny"],"case":"","plural":""},{"ita":"stella","pol":["gwiazda"],"pol_plural":["gwiazdy"],"case":"","plural":""},{"ita":"straniero","pol":["cudzoziemiec"],"pol_plural":["cudzoziemcy"],"case":"","plural":""},{"ita":"studente","pol":["student"],"pol_plural":["studenci"],"case":"m","plural":""},{"ita":"studentessa","pol":["stuedntka"],"pol_plural":["studentki"],"case":"","plural":""},{"ita":"tappeto","pol":["dywan"],"pol_plural":["dywany"],"case":"","plural":""},{"ita":"tassi","pol":["taksówka"],"pol_plural":["taksówki"],"case":"m","plural":""},{"ita":"tartaruga","pol":["żółw"],"pol_plural":["żółwie"],"case":"","plural":""},{"ita":"tavolo","pol":["stół"],"pol_plural":["stoły"],"case":"","plural":""},{"ita":"tazza","pol":["filiżanka"],"pol_plural":["filiżanki"],"case":"","plural":""},{"ita":"tempo","pol":["czas"],"pol_plural":["czasy"],"case":"","plural":""},{"ita":"treno","pol":["pociąg"],"pol_plural":["pociągi"],"case":"","plural":""},{"ita":"tè","pol":["herbata"],"pol_plural":["herbaty"],"case":"m","plural":""},{"ita":"ufficio","pol":["biuro"],"pol_plural":["biura"],"case":"","plural":""},{"ita":"università","pol":["uniwersytet"],"pol_plural":["uniwersytety"],"case":"f","plural":""},{"ita":"vacanza","pol":["wakacje"],"pol_plural":["wakacje","(l.mnoga)"],"case":"","plural":""},{"ita":"valigia","pol":["walizka"],"pol_plural":["walizki"],"case":"","plural":""},{"ita":"venerdì","pol":["piątek"],"pol_plural":["piątki"],"case":"m","plural":""},{"ita":"verdura","pol":["warzywo"],"pol_plural":["warzywa"],"case":"","plural":""},{"ita":"vestito","pol":["sukienka"],"pol_plural":["sukienki"],"case":"","plural":""},{"ita":"voglia","pol":["ochota"],"pol_plural":["ochoty"],"case":"","plural":""},{"ita":"zaino","pol":["plecak"],"pol_plural":["plecaki"],"case":"","plural":""},{"ita":"zio","pol":["wujek"],"pol_plural":["wujkowie"],"case":"","plural":"zii"},{"ita":"zucchero","pol":["cukier"],"pol_plural":["cukry"],"case":"","plural":""}],"verb":[{"ita":"abitare","pol":["mieszkać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"adorare","pol":["uwielbiać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"amare","pol":["kochać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"andare","pol":["iść","jechać"],"con":"-","forms":{"normal":["vado","vai","va","andiamo","andate","vanno"]}},{"ita":"aspettare","pol":["czekać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"avere","pol":["mieć"],"con":"-","forms":{"normal":["ho","hai","ha","abbiamo","avete","hanno"]}},{"ita":"ballare","pol":["tańczyć"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"bere","pol":["pić"],"con":"","forms":{"normal":["bevo","bevi","beve","beviamo","bevete","bevono"]}},{"ita":"camminare","pol":["chodzić"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"cantare","pol":["śpiewać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"capire","pol":["rozumieć"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"chiarire","pol":["wyjaśniać"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"chiudere","pol":["zamykać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"collaborare","pol":["współpracować"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"cominciare","pol":["zaczynać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"comprare","pol":["kupować"],"con":"are","forms":{"normal":["","","","","",""]}},{"ita":"conoscere","pol":["znać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"construire","pol":["budować"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"correre","pol":["biegać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"credere","pol":["wierzyć"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"cucinare","pol":["gotować"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"dare","pol":["dawać"],"con":"-","forms":{"normal":["do","dai","dà","diamo","date","danno"]}},{"ita":"dormire","pol":["spać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"essere","pol":["być"],"con":"-","forms":{"normal":["sono","sei","è","siamo","siete","sono"]}},{"ita":"fare","pol":["robić"],"con":"-","forms":{"normal":["faccio","fai","fa","facciamo","fate","fanno"]}},{"ita":"finire","pol":["skończyć"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"giocare","pol":["grać","bawić się"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"guardare","pol":["oglądać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"guidare","pol":["jechać","prowadzić"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"incontrare","pol":["spotykać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"inviare","pol":["wysyłać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"lavorare","pol":["pracować"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"leggere","pol":["czytać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"mangiare","pol":["jeść"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"nuotare","pol":["pływać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"pagare","pol":["płacić"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"parlare","pol":["rozmawiać","mówić"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"partecipare","pol":["uczestniczyć"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"partire","pol":["wyjeżdżać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"passare","pol":["mijać","spędzać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"pensare","pol":["myśleć"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"perdere","pol":["tracić","gubić"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"preferire","pol":["preferować"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"prendere","pol":["brać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"pulire","pol":["sprzątać"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"ridere","pol":["śmiać się"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"rispondere","pol":["odpowiadać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"sciare","pol":["jeździć na nartach"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"scrivere","pol":["pisać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"sentire","pol":["słyszeć","czuć"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"spedire","pol":["wysyłać"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"spesare","pol":["wydawać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"stare","pol":["być","być (jakimś)"],"con":"-","forms":{"normal":["sto","stai","sta","stiamo","state","stanno"]}},{"ita":"studiare","pol":["studiować"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"suonare","pol":["grać","grać (na instrumencie)"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"telefonare","pol":["dzwonić"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"unire","pol":["łączyć"],"con":"ireB","forms":{"normal":["","","","","",""]}},{"ita":"usare","pol":["używać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"uscire","pol":["wychodzić"],"con":"","forms":{"normal":["esco","esci","esce","usciamo","uscite","escono"]}},{"ita":"vedere","pol":["widzieć"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"vendere","pol":["sprzedawać"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"viaggiare","pol":["podróżować"],"con":"","forms":{"normal":["","","","","",""]}},{"ita":"vivere","pol":["żyć"],"con":"","forms":{"normal":["","","","","",""]}}],"adj":[{"ita":"aggressivo","pol":["agresywny"]},{"ita":"alcuno","pol":["jakiś","żaden"]},{"ita":"allegro","pol":["wesoły"]},{"ita":"alto","pol":["wysoki"]},{"ita":"altro","pol":["inny"]},{"ita":"amaro","pol":["gorzki"]},{"ita":"americano","pol":["amarykański"]},{"ita":"antipatico","pol":["niesympatyczny"]},{"ita":"anziano","pol":["stary","(o osobie)"]},{"ita":"aperto","pol":["otwarty"]},{"ita":"arrogante","pol":["arogancki"]},{"ita":"azzurro","pol":["niebieski"]},{"ita":"basso","pol":["niski"]},{"ita":"bello","pol":["ładny"]},{"ita":"biondo","pol":["blond"]},{"ita":"brutto","pol":["brzydki"]},{"ita":"buono","pol":["dobry"]},{"ita":"calmo","pol":["spokojny"]},{"ita":"castano","pol":["kasztanowy"]},{"ita":"cattivo","pol":["zły"]},{"ita":"chiaro","pol":["jasny"]},{"ita":"chiuso","pol":["zamknięty"]},{"ita":"cortese","pol":["miły"]},{"ita":"corto","pol":["krótki"]},{"ita":"difficile","pol":["trudny"]},{"ita":"diverso","pol":["różny"]},{"ita":"dolce","pol":["słodki"]},{"ita":"educato","pol":["wykształcony"]},{"ita":"estroverso","pol":["towarzyski"]},{"ita":"facile","pol":["łatwy"]},{"ita":"falso","pol":["fałszywy"]},{"ita":"fisico","pol":["fizyczny"]},{"ita":"fisico","pol":["fizyczny"]},{"ita":"gentile","pol":["łagodny","miły"]},{"ita":"giovane","pol":["młody"]},{"ita":"giusto","pol":["prawidłowy"]},{"ita":"grande","pol":["duży"]},{"ita":"grasso","pol":["gruby"]},{"ita":"importante","pol":["ważny"]},{"ita":"italiano","pol":["włoski"]},{"ita":"leggero","pol":["lekki"]},{"ita":"lento","pol":["powolny"]},{"ita":"libero","pol":["wolny"]},{"ita":"liscio","pol":["gładki"]},{"ita":"lungo","pol":["długi"]},{"ita":"magro","pol":["chudy","szczupły"]},{"ita":"malato","pol":["chory"]},{"ita":"maleducato","pol":["niewykształcony"]},{"ita":"modesto","pol":["skromny"]},{"ita":"nero","pol":["czarny"]},{"ita":"nervoso","pol":["nerwowy"]},{"ita":"noioso","pol":["nudny"]},{"ita":"nuovo","pol":["nowy"]},{"ita":"occupato","pol":["zajęty"]},{"ita":"pesante","pol":["ciężki"]},{"ita":"piccolo","pol":["mały"]},{"ita":"pieno","pol":["pełny","syty"]},{"ita":"polacco","pol":["polski"]},{"ita":"povero","pol":["biedny"]},{"ita":"prossimo","pol":["przyszły","bliski"]},{"ita":"pulito","pol":["czysty"]},{"ita":"riccio","pol":["kręcony"]},{"ita":"ricco","pol":["bogaty"]},{"ita":"robusto","pol":["dobrze zbudowany"]},{"ita":"rosso","pol":["czerwony"]},{"ita":"sbagliato","pol":["niepoprawny"]},{"ita":"scortese","pol":["niegrzeczny"]},{"ita":"scuro","pol":["ciemny"]},{"ita":"simpatico","pol":["sympatyczny"]},{"ita":"solito","pol":["zwykły"]},{"ita":"solo","pol":["sam"]},{"ita":"sporco","pol":["brudny"]},{"ita":"stanco","pol":["zmęczony"]},{"ita":"stupido","pol":["głupi"]},{"ita":"tedesco","pol":["niemiecki"]},{"ita":"timilo","pol":["nieśmiały"]},{"ita":"triste","pol":["smutny"]},{"ita":"tutto","pol":["cały","(wszyscy)","(wszyscy)","(wszyscy)","(wszyscy)"]},{"ita":"uguale","pol":["równy","identyczny"]},{"ita":"ungherese","pol":["więgierski"]},{"ita":"vecchio","pol":["stary","(o rzeczach)"]},{"ita":"veloce","pol":["szybki"]},{"ita":"verdo","pol":["zielony"]},{"ita":"vero","pol":["prawdziwy"]},{"ita":"vuoto","pol":["pusty"]}],"other":[{"ita":"adesso","pol":["teraz"]},{"ita":"allora","pol":["wtedy","w takim razie"]},{"ita":"anche","pol":["również"]},{"ita":"anzi","pol":["lepiej","przeciwnie"]},{"ita":"certo","pol":["oczywiście"]},{"ita":"come","pol":["jak","jaki"]},{"ita":"con","pol":["z"]},{"ita":"di solito","pol":["zazwyczaj"]},{"ita":"di solito","pol":["zazwyczaj"]},{"ita":"domani","pol":["jutro"]},{"ita":"dopo","pol":["później"]},{"ita":"e","pol":["i"]},{"ita":"ecco","pol":["proszę","proszę bardzo"]},{"ita":"forse","pol":["być może"]},{"ita":"infatti","pol":["rzeczywiście"]},{"ita":"insieme","pol":["razem"]},{"ita":"ma","pol":["ale"]},{"ita":"meglio","pol":["lepiej"]},{"ita":"o","pol":["lub"]},{"ita":"oggi","pol":["dzisiaj"]},{"ita":"ogni","pol":["każdy"]},{"ita":"per","pol":["aby","dla"]},{"ita":"perché","pol":["dlaczego"]},{"ita":"piacere","pol":["miło mi"]},{"ita":"poco","pol":["trochę"]},{"ita":"poi","pol":["potem"]},{"ita":"presto","pol":["wcześnie"]},{"ita":"prima","pol":["najpierw","przed"]},{"ita":"qualche volta","pol":["czasami"]},{"ita":"quando","pol":["kiedy"]},{"ita":"quasi","pol":["prawie"]},{"ita":"questa","pol":["ta"]},{"ita":"questo","pol":["ten"]},{"ita":"qui","pol":["tutaj"]},{"ita":"saldi","pol":["pieniądze"]},{"ita":"se","pol":["gdyby"]},{"ita":"sempre","pol":["zawsze"]},{"ita":"senza","pol":["bez"]},{"ita":"spesso","pol":["często"]},{"ita":"stasera","pol":["dzisiaj wieczorem"]},{"ita":"tanto","pol":["bardzo","wiele"]},{"ita":"tardi","pol":["późno"]},{"ita":"troppo","pol":["zbyt dużo","za bardzo"]}]}
+
+////////// LANGUAGE REGULARS ////////////////
+
+
+function sanitize_word(word){
+    return word.trim();
+}
+function sanitize_word_arr(arr){
+	return arr.map(x => sanitize_word(x)).filter(x => x != "");
+}
+
+const WORDS_DATA_TYPES = ["noun", "verb", "adj", "other"];
+
+function convert_to_word_type(word, type){
+	switch(type){
+		case "noun":   Object.setPrototypeOf(word, WordNoun.prototype);  break;
+		case "verb":   Object.setPrototypeOf(word, WordVerb.prototype);  break;
+		case "adj":    Object.setPrototypeOf(word, WordAdj.prototype);   break;
+		case "other":  Object.setPrototypeOf(word, WordOther.prototype); break;
+		default: {
+			console.error("INVALID WORD TYPE DURING CONVERSION", word, type);
+		}
+	}
+	return word;
+}
+
+// const WORDS_DATA_TYPES_CLASSES = {
+// 	noun: WordNoun,
+// 	verb: WordVerb,
+// 	adj: WordAdj,
+// 	other: WordOther
+// }
+
+function copy_words(words){
+	const json = JSON.stringify(words);
+	const res = parse_words_json(json);
+	return res;
+}
+function parse_words_json(words_json){
+    let words_data = JSON.parse(words_json);
+	for(let type of WORDS_DATA_TYPES){
+		words_data[type] = sort_words(
+			parse_word_data(type, words_data[type] || [])
+		);	
+	}
+    return words_data;
+}
+
+function parse_word_data(type, words){
+	switch(type){
+		case "noun": {
+			return words.map(w => new WordNoun(
+				w.ita,
+				w.pol,
+				w.pol_plural,
+				w.case,
+				w.plural
+			));
+		}
+		case "verb": {
+			return words.map(w => new WordVerb(
+				w.ita,
+				w.pol,
+				w.con,
+				w.forms
+			));
+		}
+		case "adj": {
+			return words.map(w => new WordAdj(
+				w.ita,
+				w.pol
+			));
+		}
+		case "other": {
+			return words.map(w => new WordOther(
+				w.ita,
+				w.pol
+			));
+		}
+	}
+}
+
+function generate_words_json(words_data){
+    let words_json = JSON.stringify(words_data);
+    return words_json.toString();
+}
+
+function sort_words(words){
+    return words.sort((a, b) => {
+        return a.ita > b.ita ? 1 : -1;
+    })
+}
+
+function insert_word_sorted(words, word){
+    console.debug("INSERT WORDS", words, word);
+    let index = words[0].findIndex(w => w.ita > word.ita);
+    if(index < 0) index = words[0].length;
+    words[0].splice(index, 0, word.clone());
+    console.debug("AFTER INSERT", words);
+}
+
+function create_empty_word(type){
+	console.debug(type);
+    switch(type){
+        case "noun":  return new WordNoun();
+        case "adj":   return new WordAdj();
+        case "verb":  return new WordVerb();
+        case "other": return new WordOther();
+    }
+    return null;
+}
+
+
+function generate_regular_case(ita){
+	const last_char = ita[ita.length - 1];
+	if(last_char === 'o'){
+		return 'm'
+	}else if(last_char === 'a'){
+		return 'f'
+	}
+	return '';
+}
+
+function generate_regular_plural(ita){
+	const last_char = ita[ita.length - 1];
+	const pre_last = ita.length >= 2 ? ita[ita.length - 2] : "";
+	const word_core = ita.slice(0,-1);
+	if(last_char === 'o'){
+		if(pre_last === "c" || pre_last === "g"){
+			return word_core + "hi";
+		}else if(pre_last === 'i'){
+			return word_core;
+		}else{
+			return word_core + "i";
+		}
+	}else if(last_char === 'a'){
+		if(pre_last === "c" || pre_last === "g"){
+			return word_core + "he";
+		}else{
+			return word_core + "e";
+		}
+	}else if(last_char === 'e'){
+		return word_core + "i";
+	}
+	return ita;
+}
+
+//// DIFF //////
+
+function diff_array_shallow(arr1, arr2){
+	const add = arr2.filter(x => arr1.indexOf(x) === -1);
+	const rem = arr1.filter(x => arr2.indexOf(x) === -1);
+	const is_changed = add.length !== 0 || rem.length !== 0;
+	return is_changed ? {add, rem, shallow: true} : null;
+}
+
+function merge_array_shallow(arr, diff){
+	if(!diff) return arr;
+	return [...arr.filter(x => diff.rem.indexOf(x) === -1), ...diff.add];
+}
+
+function diff_object_deep(o1, o2, shallow_test = (key) => false){
+	if( typeof(o1) !== typeof(o2) || typeof(o1) !== "object"){
+		return o1 !== o2 ? o2 : null;
+	}
+	const k1 = Object.keys(o1);
+	const rem = k1.filter(key => o2[key] === undefined);
+	const add = {};
+	const chg = {};
+	for(let key in o2){
+		if(o1[key] === undefined){
+			add[key] = o2[key];
+			continue;
+		}
+		const as_shallow = (o1[key] instanceof Array) ? shallow_test(key): false;
+		const diff = as_shallow ? 
+						diff_array_shallow(o1[key], o2[key]) : 
+						diff_object_deep(o1[key], o2[key], shallow_test);
+		if(diff !== null){
+			chg[key] = diff;
+		}
+	}
+	const is_changed = rem.length !== 0 || !is_empty(add) || !is_empty(chg);
+	return is_changed ? {add, rem, chg} : null;
+}
+
+function merge_object_deep(o, diff, old_key){
+	console.debug("MERGE OBJ NEW", old_key, o, diff);
+	if(diff === null){
+		console.debug("MERGE OBJ NULL");
+		return o;
+	}
+	if(typeof(o) !== "object"){
+		console.debug("MERGE OBJ DIFF");
+		return diff;
+	}
+	if(diff.shallow){
+		console.debug("MERGE OBJ SHALLOW");
+		return merge_array_shallow(o, diff);
+	}
+	const res = (o instanceof Array) ? [] : {};
+	for(let key in o){
+		if(diff.rem.indexOf(key) !== -1) continue;
+		res[key] = o[key];
+	}
+	for(let key in diff.chg){
+		res[key] = merge_object_deep(o[key], diff.chg[key], key);
+	}
+	for(let key in diff.add){
+		res[key] = diff.add[key];
+	}
+	console.debug("MERGE OBJ RES", old_key, res, o, diff);
+	return res;
+}
+
+function generate_shallow_test_for_word_type(type){
+	return (key) => {
+		return key === "pol" || key === "pol_plural";
+	}
+}
+
+function diff_words_list(words1, words2, type){
+	console.debug("DIFF WORD NEW", type, words1, words2);
+	const itas1 = words1.map(x => x.ita);
+	const itas2 = words2.map(x => x.ita);
+	const words_rem = itas1.filter(x => itas2.indexOf(x) === -1);
+	console.debug("DIFF WORD TO REM", words_rem);
+	const words_add = {};
+	const words_chg = {};
+	for(let word of words2){
+		const index = itas1.indexOf(word.ita);
+		if(index === -1){
+			console.debug("DIFF WORD TO ADD ", word.ita);
+			words_add[word.ita] = word;
+		}else{
+			const base_word = words1[index];
+			const diff = diff_object_deep(base_word, word, generate_shallow_test_for_word_type(type));
+			if(diff){
+				console.debug("DIFF WORD TO CHG", word.ita);
+				words_chg[word.ita] = diff;
+			}
+		}
+	}
+	const is_changed = words_rem.length !== 0 || !is_empty(words_add) || !is_empty(words_chg);
+	console.debug("DIFF WORD RES", {words_add, words_chg, words_rem}, words1, words2);
+	return is_changed ? {words_add, words_chg, words_rem} : null;
+}
+
+function merge_words_list(words, diff, type){
+	console.debug("MERGE WORD NEW", type, words, diff);
+	if(diff === null){
+		return words;
+	}
+	const res = words.filter(word => diff.words_rem.indexOf(word.ita) === -1);
+	console.debug("MERGE WORD AFTER REM", res.map(x => x.ita));
+	const itas = res.map(x => x.ita);
+	for(let key in diff.words_chg){
+		const index = itas.indexOf(key);
+		if(index === -1) continue;
+		
+		res[index] = merge_object_deep(res[index], diff.words_chg[key], key);
+		convert_to_word_type(res[index], type);
+		console.debug("MERGE WORD DID CHG", key, res[index], diff.words_chg[key]);
+	}
+	for(let key in diff.words_add){
+		const index = itas.indexOf(key);
+		if(index !== -1) continue;
+		// res[key] = merge_object_deep(res[key], diff.words_add[key]);
+		// res[index] = diff.words_add[key];
+		res.push(diff.words_add[key]);
+		convert_to_word_type(diff.words_add[key], type);
+		console.debug("MERGE WORD DID ADD", key, diff.words_add[key]);
+	}
+	console.debug("MERGE WORD RES", res);
+	const res_sorted = sort_words(res);
+	return res_sorted;
+}
+
+function diff_words(w1, w2){
+	const words_diff = {};
+	console.debug("DIFF WORDS", w1, w2);
+	for(let type of WORDS_DATA_TYPES){
+		const words1 = w1[type] || [];
+		const words2 = w2[type] || [];
+		// console.debug("DIFF WORD TYPE", type, words1, words2);
+		words_diff[type] = diff_words_list(words1, words2, type);
+		// break;
+	}
+	console.debug("DIFF WORDS RES", words_diff);
+	return words_diff;
+}
+
+function merge_words(words, words_diff){
+	const res = {};
+	for(let type of WORDS_DATA_TYPES){
+		// console.debug("MERGE WORD TYPE", type, words, words_diff);
+		res[type] = merge_words_list(words[type], words_diff[type], type);
+		// const json = JSON.stringify(words[type]);
+		// console.debug(json);
+		// const cpy = JSON.parse(json);
+		// res[type] = merge_words_list(cpy, words_diff[type]);
+		// break;
+	}
+	return res;
+}
+
+function is_empty(ob){ return Object.keys(ob).length === 0; }
+
+///// WORDS ///////////
+
+
+
+//// NOUNS
+
+
+class WordNoun{
+    constructor(ita = '', pol = [], pol_plural = [], gram_case = "", plural = ""){
+        this.ita = sanitize_word(ita);
+        this.pol = sanitize_word_arr(pol);
+        this.pol_plural = sanitize_word_arr(pol_plural);
+        this.case = gram_case;
+        this.plural = sanitize_word(plural);
+    }
+
+    true_case(){
+        // console.log("C ", this.ita);
+        return this.case || generate_regular_case(this.ita);
+    }
+    true_plural(){
+        return this.plural || generate_regular_plural(this.ita);
+    }
+
+    clone(){
+        return new WordNoun(
+            this.ita,
+            this.pol,
+			this.pol_plural,
+            this.case,
+            this.plural
+        );
+    }
+
+	is_complete(){
+		return this.ita !== '' && this.pol.length > 0 &&
+			   this.pol_plural.length > 0 && this.true_case() !== "";
+	}
+
+	is_irregular(){
+		return this.plural !== '';
+	}
+
+	to_all_questions(options){
+		if(!this.is_complete()){
+			return [];
+		}
+		let res = [new TestQuestion_Noun(this, options.lang, false)];
+		if( (options.nouns_plural_level > 0  && this.is_irregular())  ||
+			(options.nouns_plural_level == 2 && Math.random() <= 0.5) ||
+			(options.nouns_plural_level == 3)){
+				res.push(new TestQuestion_Noun(this, options.lang, true));
+		}
+		return res;
+	}
+}
+
+//// Adjectives
+
+
+class WordAdj{
+    constructor(ita = '', pol = []){
+        this.ita = sanitize_word(ita);
+        this.pol = sanitize_word_arr(pol);
+    }
+
+    clone(){
+        return new WordAdj(
+            this.ita,
+            this.pol
+        );
+    }
+
+	is_complete(){
+		return this.ita !== '' && this.pol.length > 0;
+	}
+
+	is_irregular(){
+		return true;
+	}
+
+	to_all_questions(options){
+		if(!this.is_complete()){
+			return [];
+		}
+		let res = [new TestQuestion_Adj(this, options.lang)];
+		return res;
+	}
+}
+
+//// VERBS
+
+class WordVerb{
+    constructor(ita = '', pol = [], con = "", forms = {}){
+        this.ita = sanitize_word(ita);
+        this.pol = sanitize_word_arr(pol);
+        this.con = con;
+        this.forms = {};
+        this.load_form('normal', forms.normal);
+    }
+
+    load_form(name, data = [], count = 6){
+        this.forms[name] = [];
+        for(let i = 0; i < count; i++){
+            this.forms[name][i] = sanitize_word(data[i] || "");
+        }
+    }
+
+    clone(){
+        return new WordVerb(
+            this.ita,
+            this.pol,
+            this.con,
+            this.forms
+        );
+    }
+
+	is_complete(){
+		return this.ita !== "" && this.pol.length > 0 &&
+				sanitize_word_arr(this.true_form_normal()).length === 6;
+	}
+
+    to_all_questions(options){
+		if(!this.is_complete()){
+			return [];
+		}
+		let res = [new TestQuestion_Verb(this, options.lang, "inf")];
+		const add_con = (form, persons) => {
+			for(let i of persons){
+				res.push(new TestQuestion_Verb(this, options.lang, form, i));
+			}
+		}
+		switch(options.verbs_con_level){
+			case 0: return res;
+			case 1: {
+				if(this.true_con() === "-") add_con("normal", [0,1,2,3,4,5]);
+				return res;
+			}
+			case 2: {
+				add_con("normal", [0,1,2,3,4,5].filter(x => Math.random() <= 1/6));
+				return res;
+			}
+			case 3: {
+				add_con("normal", [0,1,2,3,4,5]);
+				return res;
+			}
+		}
+    }
+
+    true_con(){
+        if(this.con){
+            return this.con;
+        }
+		if(this.forms.normal.filter(x => x !== "").length !== 0){
+			return "-";
+		}
+        if(this.ita.slice(-3) === "are"){
+            return "are";
+        }
+        if(this.ita.slice(-3) === "ere"){
+            return "ere";
+        }
+        if(this.ita.slice(-3) === "ire"){
+            return "ire";
+        }
+        return "-";
+    }
+
+    true_form_normal(){
+        const con = this.true_con();
+
+		const base = this.ita.slice(0, -3);
+		const ends_with_i = base.length > 0 && (base[base.length - 1] === 'i');
+		const ends_with_g = base.length > 0 && (base[base.length - 1] === 'g');
+		const ends_with_c = base.length > 0 && (base[base.length - 1] === 'c');
+		const opt_i = ends_with_i ? "" : "i";
+
+		const p2 = (con == 'are') ? 'a' : "e"; 
+		const p4 = con[0] + "te";
+		const p5 = (con == 'are') ? 'ano' : "ono";
+		const add_h = (con == 'are' && (ends_with_g || ends_with_c)) ? "h" : "";
+		const add_isc = (con == 'ireB') ? "isc" : "";
+
+		return [
+			this.forms.normal[0] || base + add_isc + 'o',
+			this.forms.normal[1] || base + add_isc + add_h + opt_i,
+			this.forms.normal[2] || base + add_isc + p2,
+			this.forms.normal[3] || base + add_h + opt_i + 'amo',
+			this.forms.normal[4] || base + p4,
+			this.forms.normal[5] || base + add_isc + p5,
+		];
+
+        // return this.forms.normal;
+    }
+}
+
+//// OTHER /////
+
+class WordOther{
+    constructor(ita = '', pol = []){
+        this.ita = sanitize_word(ita);
+        this.pol = sanitize_word_arr(pol);
+    }
+
+    clone(){
+        return new WordOther(
+            this.ita,
+            this.pol,
+        )
+    }
+
+	is_complete(){
+		return this.ita !== "" && this.pol.length > 0;
+	}
+
+    to_all_questions(options){
+		if(!this.is_complete()){
+			return [];
+		}
+		let res = [new TestQuestion_Other(this, options.lang)];
+		return res;
+    }
+}
+
